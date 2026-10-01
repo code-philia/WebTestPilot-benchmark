@@ -1,0 +1,93 @@
+services:
+  webapp:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: app.Dockerfile
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - APP_URL=http://webapp:8080
+      - APP_KEY=base64:F4hZhDJ4XTPq2i11SejFCd3DzLa7ARzVUo5+q4PN9og=
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USERNAME=admin
+      - DB_PASSWORD=admin
+      - DB_DATABASE=bookstack
+    volumes:
+      - app_config:/config
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/login"]
+      interval: 2s
+      timeout: 5s
+      retries: 90
+      start_period: 60s
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    environment:
+      - MYSQL_DATABASE=bookstack
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - db:/var/lib/mysql
+      - ./baseline.sql:/docker-entrypoint-initdb.d/00-baseline.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uadmin", "-padmin"]
+      interval: 2s
+      timeout: 5s
+      retries: 25
+    restart: unless-stopped
+
+  # Headless Chromium; socat forwards 0.0.0.0:9222 → Chromium 127.0.0.1:19222.
+  # Agents/verifiers connect via connect_over_cdp("http://browser:9222").
+  browser:
+    build:
+      context: .
+      dockerfile: browser.Dockerfile
+    environment:
+      - INJECT_BUG=${INJECT_BUG:-false}
+      - SETUP_FUNCTION=${SETUP_FUNCTION:-$setup_fn_default}
+      - APP_URL=http://webapp:8080
+      - PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+      - PYTHONUNBUFFERED=1
+      # flash's own DB snapshot/rollback recovery discovers these via
+      # GET http://browser:9222/flash-db-config.json - the same host:port it already uses for CDP.
+      - FLASH_DB_ENGINE=mysql
+      - FLASH_DB_HOST=db
+      - FLASH_DB_PORT=3306
+      - FLASH_DB_USER=admin
+      - FLASH_DB_PASSWORD=admin
+      - FLASH_DB_NAME=bookstack
+    volumes:
+      - ./init.py:/init.py:ro
+      - ./bug.js:/bug.js:ro
+      - ./bug_injector.js:/bug_injector.js:ro
+    command: python3 /init.py
+    depends_on:
+      webapp:
+        condition: service_healthy
+      seed-loader:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  seed-loader:
+    image: mysql:8.4
+    volumes:
+      - ./seed.sql:/seed.sql:ro
+      - ./seed-loader.sh:/seed-loader.sh:ro
+    command: bash /seed-loader.sh
+    depends_on:
+      webapp:
+        condition: service_healthy
+    restart: "no"
+
+volumes:
+  app_config:
+  db:

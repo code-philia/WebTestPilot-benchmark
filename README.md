@@ -1,6 +1,6 @@
 # WebTestPilot Benchmark
 
-This repository contains GUI test cases and bug injection scripts for four web applications. It is derived from the [original WebTestPilot benchmark](https://github.com/code-philia/WebTestPilot/tree/b0659bd9908f11c7957602a9372fc100dda50e40/benchmark), with revised test steps and expected results. The `change_*` UI experiments are no longer part of this benchmark.
+This repository contains GUI test cases, bug injection scripts, and reproducible environments for four web applications. It is derived from the [original WebTestPilot benchmark](https://github.com/code-philia/WebTestPilot/tree/b0659bd9908f11c7957602a9372fc100dda50e40/benchmark), with revised test steps and expected results. The `change_*` UI experiments are no longer part of this benchmark.
 
 ## Repository structure
 
@@ -8,11 +8,14 @@ This repository contains GUI test cases and bug injection scripts for four web a
 <app>/
   test_cases/<task>.yaml   # ordered test steps and expected results
   bugs/<task>.js           # optional bug injection script for the same task
+  environment/             # Compose, seed data, app images, and app configuration
+runtime/                   # shared browser, login, and bug injection files
+app_config.json            # app URLs, copied assets, and account reference data
 template.yaml              # YAML example
 template.js                # bug script example
 ```
 
-There are 100 test cases across BookStack, Indico, Invoice Ninja, and PrestaShop. The YAML filename identifies the task; a bug script with the same filename stem is used when that task is run with bug injection enabled. The application containers, seed data, and login automation are supplied by the benchmark runner.
+There are 100 test cases across BookStack, Indico, Invoice Ninja, and PrestaShop. The YAML filename identifies the task; a bug script with the same filename stem is used when that task is run with bug injection enabled. Each app's `environment/` contains its Compose stack and seed assets. Shared browser startup, login setup, and bug injection live in `runtime/`. A runner assembles these inputs into isolated task environments.
 
 ## Test case format
 
@@ -46,7 +49,7 @@ The filename stem is the stable task identifier. Use a unique stem within each a
 
 ## Web applications and accounts
 
-These are the application image versions and **web login** accounts used by the current reference runner. They were checked against its container definitions and login setup; database credentials are separate. The PrestaShop 8.2.8 Apache image is pinned by digest in the runner.
+These are the application image versions and **web login** accounts defined by this repository's environment files and login setup; database credentials are separate. The PrestaShop 8.2.8 Apache image is pinned by digest in its app Dockerfile.
 
 | Web app | Application version / image | Login | Password | Notes |
 | --- | --- | --- | --- | --- |
@@ -59,13 +62,14 @@ These are the application image versions and **web login** accounts used by the 
 ## Adding a new task
 
 1. Add `<app>/test_cases/<task>.yaml` using [`template.yaml`](template.yaml) and an existing test case as examples. Give each step an action and a specific expectation; add `ground_truth` assertions where they can check the result directly.
-2. Set `setup_function` when the task needs a particular logged-in session. Use a function supported by the runner.
+2. Set `setup_function` when the task needs a particular logged-in session. The supported functions are registered in [`runtime/init.py`](runtime/init.py).
 3. If the task has an injected bug, add `<app>/bugs/<task>.js` using [`template.js`](template.js). Keep the `// BEGIN` and `// END` markers around both functions.
 4. Run the task through the intended runner to check the setup, each step, and the bug condition.
 
 ## Adding a new app
 
-1. Create `<app>/test_cases/` and, if the app has injected bugs, `<app>/bugs/`.
-2. Add the app's YAML cases and matching bug scripts using the same naming convention as the existing apps.
-3. Prepare a reproducible app environment and seed data in the runner. Implement any `setup_function` names used by the new cases, including login automation.
-4. Add the app version and test account to the table above, then run its tasks against the configured environment.
+1. Create `<app>/test_cases/`, `<app>/environment/`, and, if the app has injected bugs, `<app>/bugs/`. Add YAML cases and matching bug scripts using the existing naming convention.
+2. Add the app's `docker-compose.yaml`, `seed.sql`, and `seed-loader.sh` under `<app>/environment/`. Put app-specific Dockerfiles, config files, and optional `baseline.sql` there too. See [`runtime/BASELINE.md`](runtime/BASELINE.md) for baseline semantics.
+3. Add an entry to [`app_config.json`](app_config.json) with `app_url`, `extra_files`, and `extra_dirs` for app-specific assets copied into each task. Its `credentials` field is reference documentation; the login code reads its own values from `runtime/init.py`.
+4. Implement any new `setup_function` in [`runtime/init.py`](runtime/init.py), register it in `_SETUP_FUNCTIONS`, and update the version and test account table above.
+5. Generate and run the app's tasks with a consumer of this benchmark to verify its environment and steps.

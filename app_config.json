@@ -1,0 +1,45 @@
+{
+    "bookstack": {
+        "app_url": "http://webapp:8080",
+        "extra_files": ["app.Dockerfile"],
+        "extra_dirs": [],
+        "credentials": {
+            "login_to_bookstack": {"User": "admin@admin.com", "Password": "password"}
+        }
+    },
+    "indico": {
+        "app_url": "http://nginx:8080",
+        "extra_files": ["indico.conf", "logging.yaml", "nginx.conf"],
+        "extra_dirs": ["worker"],
+        "credentials": {
+            "login_to_indico": {"User": "admin@admin.com", "Password": "webtestpilot"}
+        }
+    },
+    "invoiceninja": {
+        "app_url": "http://nginx:80",
+        "extra_files": [],
+        "extra_dirs": ["nginx"],
+        "credentials": {
+            "login_to_invoiceninja": {
+                "User": "admin@admin.com",
+                "Password": "password"
+            }
+        }
+    },
+    "prestashop": {
+        "app_url": "http://webapp:80",
+        "extra_files": ["app.Dockerfile", "create_user.php"],
+        "extra_dirs": [],
+        "credentials": {
+            "login_to_prestashop_as_seller": {
+                "User": "admin@admin.com",
+                "Password": "admin12345",
+                "Panel": "/webtestpilot/index.php"
+            },
+            "login_to_prestashop_as_buyer": {
+                "User": "auto.customer@example.com",
+                "Password": "mypassword"
+            }
+        }
+    }
+}

@@ -1,0 +1,139 @@
+services:
+  web: &web
+    build:
+      context: worker
+      args:
+        tag: "3.3.6"
+    command: /opt/indico/run_indico.sh
+    environment:
+      - PGHOST=postgres
+      - PGUSER=indico
+      - PGPASSWORD=indicopass
+      - PGDATABASE=indico
+      - INDICO_USE_PROXY=true
+    volumes:
+      - archive:/opt/indico/archive
+      - customization:/opt/indico/custom
+      - static-files:/opt/indico/static
+      - logs:/opt/indico/log
+      - ./indico.conf:/opt/indico/etc/indico.conf:ro
+      - ./logging.yaml:/opt/indico/etc/logging.yaml:ro
+    tmpfs:
+      - /opt/indico/tmp:mode=0777
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  celery:
+    <<: *web
+    command: /opt/indico/run_celery.sh
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  celery-beat:
+    <<: *web
+    command: /opt/indico/run_celery.sh beat
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  redis:
+    image: redis
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 5s
+      retries: 25
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-bookworm
+    environment:
+      - POSTGRES_USER=indico
+      - POSTGRES_PASSWORD=indicopass
+      - POSTGRES_DB=indico
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./baseline.sql:/docker-entrypoint-initdb.d/00-baseline.sql:ro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "indico", "-d", "indico"]
+      interval: 2s
+      timeout: 5s
+      retries: 25
+    restart: unless-stopped
+
+  nginx:
+    image: ghcr.io/nginxinc/nginx-unprivileged:stable-alpine
+    volumes:
+      - static-files:/opt/indico/static:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "-H", "Host: nginx:8080", "http://localhost:8080"]
+      interval: 2s
+      timeout: 5s
+      retries: 90
+      start_period: 90s
+    depends_on:
+      - web
+    restart: unless-stopped
+
+  browser:
+    build:
+      context: .
+      dockerfile: browser.Dockerfile
+    environment:
+      - INJECT_BUG=${INJECT_BUG:-false}
+      - SETUP_FUNCTION=${SETUP_FUNCTION:-$setup_fn_default}
+      - APP_URL=http://nginx:8080
+      - PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+      - PYTHONUNBUFFERED=1
+      # flash's own DB snapshot/rollback recovery discovers these via
+      # GET http://browser:9222/flash-db-config.json - the same host:port it already uses for CDP.
+      - FLASH_DB_ENGINE=postgres
+      - FLASH_DB_HOST=postgres
+      - FLASH_DB_PORT=5432
+      - FLASH_DB_USER=indico
+      - FLASH_DB_PASSWORD=indicopass
+      - FLASH_DB_NAME=indico
+    volumes:
+      - ./init.py:/init.py:ro
+      - ./bug.js:/bug.js:ro
+      - ./bug_injector.js:/bug_injector.js:ro
+    command: python3 /init.py
+    depends_on:
+      nginx:
+        condition: service_healthy
+      seed-loader:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  seed-loader:
+    image: postgres:15-bookworm
+    environment:
+      - PGPASSWORD=indicopass
+    volumes:
+      - ./seed.sql:/seed.sql:ro
+      - ./seed-loader.sh:/seed-loader.sh:ro
+    command: bash /seed-loader.sh
+    depends_on:
+      nginx:
+        condition: service_healthy
+    restart: "no"
+
+volumes:
+  postgres-data:
+  archive:
+  static-files:
+  customization:
+  logs:
+  redis:
