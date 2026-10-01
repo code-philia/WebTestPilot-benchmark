@@ -1,0 +1,57 @@
+// BEGIN isConditionMet
+const isConditionMet = () => {
+  return window.__BUG_INJECTOR_API__.transition("invoiceninja_mark_past_due_invoice_as_paid", {
+    active: window.location.pathname === "/dashboard",
+    after: 2,
+  });
+};
+// END isConditionMet
+
+// BEGIN onConditionMet
+const onConditionMet = () => {
+  // ===== Row data =====
+  const numberText = "123456_past_due";
+  const numberHref = "/invoices/FakeInvoice/edit";
+  const clientName = "company_name";
+  const clientHref = "/clients/FakeClient";
+  const dueDate = "01/Feb/1970"; // can be empty ""
+  const balance = "$ 60,000.00";
+  const balanceBgClass = "bg-red-600"; // Tailwind bg color
+
+  // ===== Select tbody =====
+  const tbody = [...document.querySelectorAll("h3")]
+    .find(h => h.innerText.includes("Past Due Invoices"))
+    ?.closest("form")
+    ?.querySelector("table tbody");
+
+  // ===== Delete all existing rows =====
+  tbody.innerHTML = "";
+
+  // ===== Create new row =====
+  const tr = document.createElement("tr");
+  tr.className = "border-b border-gray-200";
+  tr.style.borderColor = "rgb(209, 213, 219)";
+
+  // ===== Fill row =====
+  tr.innerHTML = `
+  <td class="px-2 lg:px-2.5 xl:px-4 py-2 text-sm break-words cursor-pointer first:pl-2 py-3 overflow-hidden whitespace-nowrap text-ellipsis" style="color: rgb(42, 48, 61);">
+    <a class="text-sm hover:underline" href="${numberHref}" style="color: rgb(17, 125, 192);">${numberText}</a>
+  </td>
+
+  <td class="px-2 lg:px-2.5 xl:px-4 py-2 text-sm break-words cursor-pointer first:pl-2 py-3 overflow-hidden whitespace-nowrap text-ellipsis" style="color: rgb(42, 48, 61);">
+    <a class="text-sm hover:underline" href="${clientHref}" style="color: rgb(17, 125, 192);">${clientName}</a>
+  </td>
+
+  <td class="px-2 lg:px-2.5 xl:px-4 py-2 text-sm break-words cursor-pointer first:pl-2 py-3 overflow-hidden whitespace-nowrap text-ellipsis" style="color: rgb(42, 48, 61);">
+    ${dueDate}
+  </td>
+
+  <td class="px-2 lg:px-2.5 xl:px-4 py-2 text-sm break-words first:pl-2 py-3 overflow-hidden whitespace-nowrap text-ellipsis" style="color: rgb(42, 48, 61);">
+    <span class="text-xs px-2 py-1 rounded ${balanceBgClass} text-white font-mono">${balance}</span>
+  </td>
+  `;
+
+  // ===== Insert row =====
+  tbody.appendChild(tr);
+};
+// END onConditionMet
