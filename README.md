@@ -46,15 +46,15 @@ The filename stem is the stable task identifier. Use a unique stem within each a
 
 ## Web applications and accounts
 
-These are the application image versions and **web login** accounts used by the current reference runner. They were checked against its container definitions and login setup; database credentials are separate. PrestaShop's `8` tag specifies a major version and may resolve to different 8.x releases over time.
+These are the application image versions and **web login** accounts used by the current reference runner. They were checked against its container definitions and login setup; database credentials are separate. The PrestaShop 8.2.8 Apache image is pinned by digest in the runner.
 
 | Web app | Application version / image | Login | Password | Notes |
 | --- | --- | --- | --- | --- |
 | BookStack | `solidnerd/bookstack:25.2.1` | `admin@admin.com` | `password` | Admin account |
 | Indico | `3.3.6` (`pip install indico==3.3.6`) | `admin@admin.com` | `webtestpilot` | Admin account |
 | Invoice Ninja | `invoiceninja/invoiceninja-debian:5.11.61-d` | `admin@admin.com` | `password` | Admin account |
-| PrestaShop | `prestashop/prestashop:8` | `admin@admin.com` | `admin12345` | Seller; admin path `/webtestpilot/` |
-| PrestaShop | `prestashop/prestashop:8` | `auto.customer@example.com` | `mypassword` | Buyer account |
+| PrestaShop | `prestashop/prestashop:8.2.8-apache` | `admin@admin.com` | `admin12345` | Seller; admin path `/webtestpilot/` |
+| PrestaShop | `prestashop/prestashop:8.2.8-apache` | `auto.customer@example.com` | `mypassword` | Buyer account |
 
 ## Adding a new task
 
