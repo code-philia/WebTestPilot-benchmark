@@ -1,8 +1,71 @@
-# WebTestPilot benchmark for FLASH
+# WebTestPilot Benchmark
 
-This repository contains the benchmark source consumed by the FLASH adapter.
-It is based on the [original WebTestPilot benchmark](https://github.com/code-philia/WebTestPilot/tree/main/benchmark), with the current FLASH test case and expected result revisions. The `change_*` UI experiments have been removed.
+This repository contains GUI test cases and bug injection scripts for four web applications. It is derived from the [original WebTestPilot benchmark](https://github.com/code-philia/WebTestPilot/tree/b0659bd9908f11c7957602a9372fc100dda50e40/benchmark), with revised test steps and expected results. The `change_*` UI experiments are no longer part of this benchmark.
 
-The four app directories contain 100 YAML test cases and their matching bug scripts. `template.yaml` and `template.js` provide source examples.
+## Repository structure
 
-FLASH pins this repository as the `adapter/source` submodule. After cloning FLASH, run `just setup-benchmark` (or `just setup`) before `just build-benchmark`.
+```text
+<app>/
+  test_cases/<task>.yaml   # ordered test steps and expected results
+  bugs/<task>.js           # optional bug injection script for the same task
+template.yaml              # YAML example
+template.js                # bug script example
+```
+
+There are 100 test cases across BookStack, Indico, Invoice Ninja, and PrestaShop. The YAML filename identifies the task; a bug script with the same filename stem is used when that task is run with bug injection enabled. The application containers, seed data, and login automation are supplied by the benchmark runner.
+
+## Test case format
+
+Each YAML file describes one task. `steps` is an ordered list: `action` tells the tester what to do, `expectation` states the expected visible result, and `ground_truth` optionally supplies a Playwright Python assertion for that result.
+
+```yaml
+name: Comment
+setup_function: login_to_bookstack
+steps:
+  - action: From the dashboard click 'Page Template' link
+    expectation: Page contains title 'Page Template'
+    ground_truth: |
+      expect(page.locator("#bkmrk-page-title")).to_match_aria_snapshot("- heading \"Page Template\" [level=1]")
+
+  - action: Click 'Add Comment'
+    expectation: A WYSIWYG comment editor is open
+    ground_truth: |
+      expect(page.get_by_role("button", name="Save Comment")).to_be_visible()
+```
+
+| Field | Meaning |
+| --- | --- |
+| `name` | Human-readable task name. |
+| `setup_function` | Optional runner setup or login function to call before the task. |
+| `description` | Optional description of the task. |
+| `steps[].action` | Action to perform in the browser. |
+| `steps[].expectation` | Expected result in natural language. |
+| `steps[].ground_truth` | Optional Playwright Python assertion snippet. |
+
+The filename stem is the stable task identifier. Use a unique stem within each app, and keep a matching bug script under `bugs/` when testing bug detection. A bug script contains `isConditionMet` and `onConditionMet` blocks delimited by the markers shown in [`template.js`](template.js).
+
+## Web applications and accounts
+
+These are the application image versions and **web login** accounts used by the current reference runner. They were checked against its container definitions and login setup; database credentials are separate. PrestaShop's `8` tag specifies a major version and may resolve to different 8.x releases over time.
+
+| Web app | Application version / image | Login | Password | Notes |
+| --- | --- | --- | --- | --- |
+| BookStack | `solidnerd/bookstack:25.2.1` | `admin@admin.com` | `password` | Admin account |
+| Indico | `3.3.6` (`pip install indico==3.3.6`) | `admin@admin.com` | `webtestpilot` | Admin account |
+| Invoice Ninja | `invoiceninja/invoiceninja-debian:5.11.61-d` | `admin@admin.com` | `password` | Admin account |
+| PrestaShop | `prestashop/prestashop:8` | `admin@admin.com` | `admin12345` | Seller; admin path `/webtestpilot/` |
+| PrestaShop | `prestashop/prestashop:8` | `auto.customer@example.com` | `mypassword` | Buyer account |
+
+## Adding a new task
+
+1. Add `<app>/test_cases/<task>.yaml` using [`template.yaml`](template.yaml) and an existing test case as examples. Give each step an action and a specific expectation; add `ground_truth` assertions where they can check the result directly.
+2. Set `setup_function` when the task needs a particular logged-in session. Use a function supported by the runner.
+3. If the task has an injected bug, add `<app>/bugs/<task>.js` using [`template.js`](template.js). Keep the `// BEGIN` and `// END` markers around both functions.
+4. Run the task through the intended runner to check the setup, each step, and the bug condition.
+
+## Adding a new app
+
+1. Create `<app>/test_cases/` and, if the app has injected bugs, `<app>/bugs/`.
+2. Add the app's YAML cases and matching bug scripts using the same naming convention as the existing apps.
+3. Prepare a reproducible app environment and seed data in the runner. Implement any `setup_function` names used by the new cases, including login automation.
+4. Add the app version and test account to the table above, then run its tasks against the configured environment.
