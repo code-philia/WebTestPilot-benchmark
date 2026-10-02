@@ -31,7 +31,6 @@
   const API_NAMESPACE = "__BUG_INJECTOR_API__";
   const STORAGE_KEY = "__BUG_INJECTOR_TRIGGERED__:" + INJECTOR_KIND;
   const TRIGGERED_URL_KEY = "__BUG_INJECTOR_TRIGGERED_URL__:" + INJECTOR_KIND;
-  const FORCE_NEXT_TRANSITION_KEY = "__BUG_INJECTOR_FORCE_NEXT_TRANSITION__";
   const TRANSITION_PREV_PREFIX = "__BUG_INJECTOR_TRANSITION_PREV__:";
   const TRANSITION_COUNT_PREFIX = "__BUG_INJECTOR_TRANSITION_COUNT__:";
 
@@ -46,18 +45,11 @@
     const countKey = `${TRANSITION_COUNT_PREFIX}${normalizedKey}`;
     const isActive = Boolean(active);
     const prevActive = sessionStorage.getItem(prevKey) === "true";
-    const forceRequested = sessionStorage.getItem(FORCE_NEXT_TRANSITION_KEY) === "true";
 
     sessionStorage.setItem(prevKey, String(isActive));
 
-    if (!isActive) return false;
-
-    const isTransition = forceRequested || !prevActive;
-    if (!isTransition) return false;
-
-    if (forceRequested) {
-      sessionStorage.removeItem(FORCE_NEXT_TRANSITION_KEY);
-    }
+    // Count only inactive-to-active transitions on target pages.
+    if (!isActive || prevActive) return false;
 
     const threshold = Number(after) || 1;
     const count = Number(sessionStorage.getItem(countKey) || 0) + 1;
@@ -66,10 +58,7 @@
     return count >= threshold;
   }
 
-  window[API_NAMESPACE] = {
-    forceNextTransitionKey: FORCE_NEXT_TRANSITION_KEY,
-    transition,
-  };
+  window[API_NAMESPACE] = { transition };
 
   // Evaluates whether the desired condition has been satisfied.
   // Replace with your custom code
