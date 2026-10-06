@@ -248,6 +248,14 @@ def main() -> None:
             except Exception as e:
                 print(f"[init] Reload warning: {e}")
 
+        # Hand over a fully loaded start page: apps keep rendering after
+        # DOMContentLoaded (e.g. Indico loads its event months by XHR), and bugs
+        # that count page visits must see the start page as the first one.
+        try:
+            page.wait_for_load_state("networkidle", timeout=30_000)
+        except Exception as e:
+            print(f"[init] Start page did not reach network idle: {e}")
+
         # Expose CDP only after setup has finished so agents cannot attach mid-login.
         nginx_conf_path = Path("/tmp/cdp-nginx.conf")
         nginx_conf_path.write_text(NGINX_CONF)
