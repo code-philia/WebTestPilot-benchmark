@@ -5,44 +5,71 @@ steps:
   expectation: The shelves list is shown
   ground_truth: |
     expect(page.get_by_role("heading", name="Shelves", exact=True)).to_be_visible()
+  url: /shelves
+  solution: |
+    page.get_by_role("link", name="Shelves").click()
 
 - action: Click on 'Admin' profile dropdown
   expectation: A dropdown with profile options with 'My Favourites' appears
   ground_truth: |
     expect(page.get_by_role("link", name="My Favourites")).to_be_visible()
+  url: /shelves
+  solution: |
+    page.get_by_label("Profile Menu").get_by_role("img", name="Admin").click()
 
 - action: Click on My Favourites option
   expectation: The favourites list is shown
   ground_truth: |
     expect(page.get_by_role("heading", name="My Favourites")).to_be_visible()
+  url: /favourites
+  solution: |
+    page.get_by_role("link", name="My Favourites").click()
 
 - action: Click 'Shelves' link in navigation
   expectation: The shelves list is shown
   ground_truth: |
     expect(page.get_by_role("heading", name="Shelves", exact=True)).to_be_visible()
+  url: /shelves
+  solution: |
+    page.locator("#header").get_by_role("link", name="Shelves").click()
 
 - action: Click on shelf title 'Shelf'
   expectation: Page contains title 'Shelf'
   ground_truth: |
     expect(page.get_by_role("heading", name="Shelf")).to_be_visible()
+  url: /shelves/shelf
+  solution: |
+    page.get_by_role("link", name="Shelf Shelf Description").click()
 
 - action: Click on the Unfavourite button
   expectation: The 'Favourite' button is present
   ground_truth: |
     expect(page.get_by_role("button", name="Favourite")).to_be_visible()
+  url: /shelves/shelf
+  solution: |
+    page.get_by_role("button", name="Unfavourite").click()
 
 - action: Click 'Shelves' link in navigation
   expectation: The shelves list is shown
   ground_truth: |
     expect(page.get_by_role("heading", name="Shelves", exact=True)).to_be_visible()
+  url: /shelves
+  solution: |
+    page.locator("#header").get_by_role("link", name="Shelves").click()
     
 - action: Click on 'Admin' profile dropdown
   expectation: A dropdown with profile options with 'My Favourites' appears
   ground_truth: |
     expect(page.get_by_role("link", name="My Favourites")).to_be_visible()
+  url: /shelves
+  solution: |
+    page.get_by_label("Profile Menu").get_by_role("img", name="Admin").click()
 
 - action: Click on My Favourites option
   expectation: The favourites list should match the previous list with the item 'Shelf' removed.
   ground_truth: |
     expect(page.get_by_role("main")).not_to_contain_text("Shelf")
+  url: /favourites
+  solution: |
+    page.get_by_role("link", name="My Favourites").click()
 

@@ -5,38 +5,62 @@ steps:
   expectation: Books listing page appears
   ground_truth: |
     expect(page.get_by_role("heading", name="Books", exact=True)).to_be_visible()
+  url: /books
+  solution: |
+    page.get_by_role("link", name="Books", exact=True).click()
 
 - action: Click on book title 'Book'
   expectation: Page contains title 'Book'
   ground_truth: |
     expect(page.get_by_role("heading", name="Book")).to_be_visible()
+  url: /books/book
+  solution: |
+    page.get_by_role("link", name="Book Description Created").click()
 
 - action: Click on 'Edit' link
   expectation: Edit book form is present with 'Book' in name field
   ground_truth: |
     expect(page.get_by_role("textbox", name="Name")).to_have_value("Book")
+  url: /books/book/edit
+  solution: |
+    page.get_by_role("link", name="Edit").click()
 
 - action: Replace Name field with 'Updated Book'
   expectation: Name field contains replaced text
   ground_truth: |
     expect(page.get_by_role("textbox", name="Name")).to_have_value("Updated Book")
+  url: /books/book/edit
+  solution: |
+    page.get_by_role("textbox", name="Name").fill("Updated Book")
 
 - action: Replace Description field with 'Updated Book Description'
   expectation: Description textarea contains replaced text
   ground_truth: |
     expect(page.locator("iframe[title=\"Rich Text Area\"]").content_frame.get_by_role("paragraph")).to_contain_text("Updated Book Description")
+  url: /books/book/edit
+  solution: |
+    page.locator("iframe[title=\"Rich Text Area\"]").content_frame.get_by_label("Rich Text Area. Press ALT-0").fill("Updated Book Description")
 
 - action: Scroll the page down
   expectation: '''Cancel'' and ''Save Book'' buttons are visible'
   ground_truth: |
     expect(page.get_by_role("button", name="Save Book")).to_be_visible()
+  url: /books/book/edit
+  solution: |
+    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
 
 - action: Click 'Save Book' button
   expectation: Page title contains 'Updated Book'
   ground_truth: |
     expect(page.get_by_role("heading", name="Updated Book")).to_be_visible()
+  url: /books/updated-book
+  solution: |
+    page.get_by_role("button", name="Save Book").click()
 
 - action: Click 'Books' link in navigation
   expectation: Books list before and after is consistent with user activities
   ground_truth: |
     expect(page.get_by_role("main")).to_contain_text("Updated Book")
+  url: /books
+  solution: |
+    page.locator("#header").get_by_role("link", name="Books", exact=True).click()

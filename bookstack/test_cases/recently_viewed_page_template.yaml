@@ -5,8 +5,14 @@ steps:
   expectation: Page template details appear
   ground_truth: |
     expect(page.locator("#bkmrk-page-title")).to_contain_text("Page Template")
+  url: /books/book/page/page-template
+  solution: |
+    page.locator("#recently-viewed").get_by_role("link", name="Page Template").click()
 
 - action: Click on the Bookstack logo top left of navbar
   expectation: The 'Page Template' item appears at the top of the "My Recently Viewed" list, whether it was already present or newly added. All other items retain their previous order
   ground_truth: |
     expect(page.locator("#recently-viewed")).to_contain_text("Page Template")
+  url: /
+  solution: |
+    page.get_by_role("link", name="Logo BookStack").click()
