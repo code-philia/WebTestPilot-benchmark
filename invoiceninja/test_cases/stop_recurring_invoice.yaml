@@ -5,23 +5,38 @@ steps:
   expectation: A table of recurring invoices is shown
   ground_truth: |
     expect(page.get_by_role("heading", name="Recurring Invoices")).to_be_visible()
+  url: /recurring_invoices
+  solution: |
+    page.get_by_role("link", name="Recurring Invoices").click()
 
 - action: Check the checkbox of recurring invoice number '123456' in the table
   expectation: The checkbox becomes checked, 'Actions' dropdown button becomes enabled
   ground_truth: |
     expect(page.get_by_role("button", name="Actions").first).to_be_enabled()
+  url: /recurring_invoices
+  solution: |
+    page.get_by_label("", exact=True).check()
 
 - action: Click on the 'Actions' dropdown button
   expectation: A dropdown containing 'Stop' option is shown
   ground_truth: |
     expect(page.get_by_role("button", name="Stop")).to_be_visible()
+  url: /recurring_invoices
+  solution: |
+    page.get_by_role("button", name="Actions").first.click()
 
 - action: Click on the 'Stop' button
   expectation: The status of the invoice changes to 'Paused'
   ground_truth: |
     expect(page.get_by_text("Paused")).to_be_visible()
+  url: /recurring_invoices
+  solution: |
+    page.get_by_role("button", name="Stop").click()
 
 - action: Click on 'Dashboard' in the sidebar
   expectation: The 'Upcoming Recurring Invoices' panel no longer contains invoices
   ground_truth: |
     expect(page.get_by_role("heading", name="Dashboard")).to_be_visible()
+  url: /dashboard
+  solution: |
+    page.get_by_role("link", name="Dashboard").click()

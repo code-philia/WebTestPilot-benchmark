@@ -5,28 +5,46 @@ steps:
   expectation: A table of invoices is displayed (no need to check columns)
   ground_truth: |
     expect(page.get_by_role("heading", name="Invoices")).to_be_visible()
+  url: /invoices
+  solution: |
+    page.get_by_role("link", name="Invoices", exact=True).click()
 
 - action: Click 'New Invoice'
   expectation: A 'New Invoice' form with 'Create' tab is shown
   ground_truth: |
     expect(page.get_by_role("heading", name="New Invoice")).to_be_visible()
+  url: /invoices/create
+  solution: |
+    page.get_by_role("link", name="New Invoice").click()
 
 - action: Click 'company_name' in 'Client' dropdown
   expectation: The contacts for client is shown
   ground_truth: |
     expect(page.get_by_text("Contacts")).to_be_visible()
+  url: /invoices/create
+  solution: |
+    page.get_by_role("option", name="company_name").click()
 
 - action: Click '+ Add Item'
   expectation: A line with quantity 1 is present
   ground_truth: |
     expect(page.get_by_role("cell").first).to_be_visible()
+  url: /invoices/create
+  solution: |
+    page.get_by_role("button", name="Add Item").click()
 
 - action: Type '200' in 'Unit Cost'
   expectation: The unit cost is updated as 200
   ground_truth: |
     expect(page.locator('input[value="200"]')).to_be_visible()
+  url: /invoices/create
+  solution: |
+    page.locator(".w-full.py-2.px-3.rounded.text-sm.disabled\\:opacity-75.disabled\\:cursor-not-allowed.auto").first.fill("200")
 
 - action: Click 'Save'
   expectation: Saved invoice has subtotal of 200
   ground_truth: |
     expect(page.get_by_text("Draft")).to_be_visible()
+  url: '^\/invoices\/([A-Za-z0-9]+)\/edit\?table=products$'
+  solution: |
+    page.get_by_role("button", name="Save").click()

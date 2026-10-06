@@ -5,8 +5,14 @@ steps:
   expectation: A table of invoices is shown
   ground_truth: |
     expect(page.get_by_role("heading", name="Invoices")).to_be_visible()
+  url: /invoices
+  solution: |
+    page.get_by_role("link", name="Invoices", exact=True).click()
 
 - action: Click the invoice number '123456'
   expectation: The invoiced products calculation is consistent with subtotal 
   ground_truth: |
     expect(page.get_by_role("heading", name="Edit Invoice")).to_be_visible()
+  url: /invoices/VolejRejNm/edit
+  solution: |
+    page.get_by_role("link", name="123456", exact=True).click()

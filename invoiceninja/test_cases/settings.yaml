@@ -5,53 +5,86 @@ steps:
   expectation: A dropdown containing 'Account Management' option is shown
   ground_truth: |
     expect(page.get_by_text("Account Management")).to_be_visible()
+  url: /dashboard
+  solution: |
+    page.get_by_role("button", name="Company logo Untitled Company").click()
 
 - action: Click on 'Account Management' option
   expectation: Page with title 'Account Management' on topmost bar is shown (no need to check panel titles or subtitles)
   ground_truth: |
     expect(page.get_by_role("heading", name="Account Management")).to_be_visible()
+  url: /settings/account_management
+  solution: |
+    page.get_by_text("Account Management").click()
 
 - action: Click on 'Company Details' in the sidebar
   expectation: Page with title 'Company Details' on topmost bar and 'Industry' dropdown field in page is shown (no need to check panel titles or subtitles)
   ground_truth: |
     expect(page.get_by_role("heading", name="Company Details")).to_be_visible()
+  url: /settings/company_details
+  solution: |
+    page.get_by_role("link", name="Company Details").click()
 
 - action: Click on 'User Details' in the sidebar
   expectation: Page with title 'User Details' on topmost bar and 'Email Signature' dropdown field in page is shown (no need to check panel titles or subtitles)
   ground_truth: |
     expect(page.get_by_role("heading", name="User Details")).to_be_visible()
+  url: /settings/user_details
+  solution: |
+    page.get_by_role("link", name="User Details").click()
 
 - action: Click on 'Localization' in the sidebar
   expectation: Page with title 'Localization' on topmost bar and 'First Month of the Year' dropdown field in page is shown (no need to check panel titles or subtitles)
   ground_truth: |
     expect(page.get_by_role("heading", name="Localization")).to_be_visible()
+  url: /settings/localization
+  solution: |
+    page.get_by_role("link", name="Localization").click()
 
 - action: Click on 'Payment Settings' in the sidebar
   expectation: Page with title 'Payment Settings' on topmost bar and 'One-Page Checkout' toggle button in page is shown (no need to check panel titles or subtitles)
   ground_truth: |
     expect(page.get_by_role("heading", name="Online Payments")).to_be_visible()
+  url: /settings/online_payments
+  solution: |
+    page.get_by_role("link", name="Payment Settings").click()
 
 - action: Click on 'Product Settings' in the sidebar
   expectation: Page with title 'Product Settings' on topmost bar and 'Convert Products' toggle button in page is shown (no need to check panel titles or subtitles)
   ground_truth: |
     expect(page.get_by_role("heading", name="Product Settings")).to_be_visible()
+  url: /settings/product_settings
+  solution: |
+    page.get_by_role("link", name="Product Settings").click()
 
 - action: Click on 'Expense Settings' in the sidebar
   expectation: Page with title 'Expense Settings' on topmost bar and 'Inclusive Taxes' toggle button in page is shown (no need to check panel titles or subtitles)
   ground_truth: |
     expect(page.get_by_role("heading", name="Expense Settings")).to_be_visible()
+  url: /settings/expense_settings
+  solution: |
+    page.get_by_role("link", name="Expense Settings").click()
 
 - action: Click on 'Workflow Settings' in the sidebar
   expectation: Page with title 'Workflow Settings' on topmost bar and 'Lock Invoices' dropdown field in page is shown (no need to check panel titles or subtitles)
   ground_truth: |
     expect(page.get_by_role("heading", name="Workflow Settings")).to_be_visible()
+  url: /settings/workflow_settings
+  solution: |
+    page.get_by_role("link", name="Workflow Settings").click()
 
 - action: Click on 'Import | Export' in the sidebar
   expectation: Page with title 'Import | Export'  on topmost bar and 'Export' section in page is shown (no need to check panel titles or subtitles)
   ground_truth: |
     expect(page.get_by_role("heading", name="Import | Export")).to_be_visible()
+  url: /settings/import_export
+  solution: |
+    page.get_by_role("link", name="Import | Export").click()
 
 - action: Click on 'Backup | Restore' in the sidebar
   expectation: Page with title 'Backup | Restore' on topmost bar and 'Export' button in page is shown (no need to check panel titles or subtitles)
   ground_truth: |
     expect(page.get_by_role("heading", name="Backup | Restore")).to_be_visible()
+  url: /settings/backup_restore
+  solution: |
+    page.get_by_role("link", name="Backup | Restore").click()
