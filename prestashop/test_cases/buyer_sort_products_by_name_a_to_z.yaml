@@ -5,18 +5,30 @@ steps:
   expectation: A grid of products under 'Art' category is shown (no need to check details)
   ground_truth: |
     expect(page.get_by_role("heading", name="Art")).to_be_visible()
+  url: /9-art
+  solution: |
+    page.get_by_role("link", name="Art", exact=True).click()
 
 - action: Click on 'Studio Design' in the 'Brands' sidebar
   expectation: A list of products by brand 'Studio Design' is shown (no need to check details)
   ground_truth: |
     expect(page.locator("h1")).to_contain_text("List of products by brand Studio Design")
+  url: /brand/1-studio-design
+  solution: |
+    page.get_by_role("link", name="Studio Design").click()
 
 - action: Click on 'Sort by' dropdown
   expectation: A dropdown of sort options is shown
   ground_truth: |
     expect(page.get_by_role("link", name="Name, A to Z")).to_be_visible()
+  url: /brand/1-studio-design
+  solution: |
+    page.get_by_role("button", name="Sort by selection").click()
 
 - action: Click on 'Name, A to Z' option
   expectation: The products are correctly sorted by 'Name, A to Z', and must be extracted in row-major order (left-to-right within each row, top-to-bottom across rows) (no need to get image)
   ground_truth: |
     expect(page.get_by_label("Sort by selection")).to_contain_text("Name, A to Z")
+  url: /brand/1-studio-design
+  solution: |
+    page.get_by_role("link", name="Name, A to Z").click()

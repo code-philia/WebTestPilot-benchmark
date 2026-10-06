@@ -5,38 +5,63 @@ steps:
   expectation: The page contains title 'Dashboard'
   ground_truth: |
     expect(page.get_by_role("heading", name="Dashboard")).to_be_visible()
+  url: '^/webtestpilot/index\.php\?controller=AdminDashboard&token=[^&#]+$'
+  solution: |
+    page.wait_for_load_state("networkidle")
+    page.get_by_role("link", name="shopping_basket Orders").click()
 
 - action: Click on 'Orders' subsection under 'Orders'
   expectation: A list of orders is shown (no need to check details)
   ground_truth: |
     expect(page.get_by_role("link", name="Orders", exact=True)).to_be_visible()
+  url: '^/webtestpilot/index\.php/sell/orders/\?_token=[^&#]+$'
+  solution: |
+    page.locator("#subtab-AdminOrders").get_by_role("link", name="Orders").click()
 
 - action: Click on the order with reference 'KHWLILZLL'
   expectation: The order details page displays the numerical subtotal as '27.30' within tolerance
   ground_truth: |
     expect(page.locator("body")).to_contain_text("€27.30")
+  url: '^/webtestpilot/index\.php/sell/orders/5/view\?_token=[^&#]+$'
+  solution: |
+    page.get_by_role("cell", name="KHWLILZLL").click()
 
 - action: Click on 'Awaiting bank wire payment' dropdown button
   expectation: A dropdown containing 'Delivered' option is shown
   ground_truth: |
     expect(page.get_by_role("option", name="Delivered")).to_be_visible()
+  url: '^/webtestpilot/index\.php/sell/orders/5/view\?_token=[^&#]+$'
+  solution: |
+    page.locator("#update_order_status_action_input_wrapper").get_by_role("combobox", name="Awaiting bank wire payment").click()
 
 - action: Type 'Shipped' in the search box above dropdown
   expectation: A dropdown containing 'Shipped' option is shown
   ground_truth: |
     expect(page.get_by_role("option", name="Shipped")).to_be_visible()
+  url: '^/webtestpilot/index\.php/sell/orders/5/view\?_token=[^&#]+$'
+  solution: |
+    page.get_by_role("searchbox").fill("Shipped")
 
 - action: Click on 'Shipped' option
   expectation: The order details page displays the numerical subtotal as '27.30' within tolerance
   ground_truth: |
     expect(page.get_by_role("option", name="Shipped")).not_to_be_visible()
+  url: '^/webtestpilot/index\.php/sell/orders/5/view\?_token=[^&#]+$'
+  solution: |
+    page.get_by_role("option", name="Shipped").click()
 
 - action: Click on 'Update status' button
   expectation: The order details page displays the numerical subtotal as '27.30' within tolerance
   ground_truth: |
     expect(page.locator("#update_order_status_action_input_wrapper").get_by_role("combobox", name="Shipped")).to_be_visible()
+  url: '^/webtestpilot/index\.php/sell/orders/5/view\?_token=[^&#]+$'
+  solution: |
+    page.locator("#update_order_status_action_btn").click()
 
 - action: Scroll down
   expectation: The records in the timeline under the "Status" tab aligns with the update
   ground_truth: |
     expect(page.locator("#update_order_status_action_input_wrapper").get_by_role("combobox", name="Shipped")).to_be_visible()
+  url: '^/webtestpilot/index\.php/sell/orders/5/view\?_token=[^&#]+$'
+  solution: |
+    page.evaluate("window.scrollBy(0, window.innerHeight)")

@@ -5,28 +5,47 @@ steps:
   expectation: The page contains title 'Dashboard'
   ground_truth: |
     expect(page.locator("#subtab-AdminThemesParent").get_by_role("link", name="Theme & Logo")).to_be_visible()
+  url: '^/webtestpilot/index\.php\?controller=AdminDashboard&token=[^&#]+$'
+  solution: |
+    page.wait_for_load_state("networkidle")
+    page.get_by_role("link", name="desktop_mac Design").click()
 
 - action: Click on 'Theme & Logo' 
   expectation: A 'Choose layouts' button is visible
   ground_truth: |
     expect(page.get_by_role("heading", name="Theme & Logo > Theme")).to_be_visible()
+  url: '^/webtestpilot/index\.php/improve/design/themes/\?_token=[^&#]+$'
+  solution: |
+    page.get_by_role("link", name="Theme & Logo").click()
 
 - action: Click on 'Pages Configuration' tab
   expectation: A 'See all theme's modules' button is visible
   ground_truth: |
     expect(page.get_by_role("heading", name="Pages Configuration")).to_be_visible()
+  url: '^/webtestpilot/index\.php\?controller=AdminPsThemeCustoConfiguration&token=[^&#]+$'
+  solution: |
+    page.get_by_role("link", name="Pages Configuration").click()
 
 - action: Click on 'Email Theme' in sidebar
   expectation: A 'Generate emails' button is visible
   ground_truth: |
     expect(page.get_by_role("heading", name="Email Theme", exact=True)).to_be_visible()
+  url: '^/webtestpilot/index\.php/improve/design/mail_theme/\?_token=[^&#]+$'
+  solution: |
+    page.get_by_role("link", name="Email Theme").click()
 
 - action: Click on 'Pages' in sidebar 
   expectation: A 'Pages in category Home' pages list is visible 
   ground_truth: |
     expect(page.get_by_role("heading", name="Pages", exact=True)).to_be_visible()
+  url: '^/webtestpilot/index\.php/improve/design/cms-pages/\?_token=[^&#]+$'
+  solution: |
+    page.get_by_role("link", name="Pages").click()
 
 - action: Click on 'Image Settings' in sidebar
   expectation: An 'Add new image type' button is visible
   ground_truth: |
     expect(page.get_by_role("heading", name="Image Settings")).to_be_visible()
+  url: '^/webtestpilot/index\.php\?controller=AdminImages&token=[^&#]+$'
+  solution: |
+    page.get_by_role("link", name="Image Settings").click()
