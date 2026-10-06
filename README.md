@@ -61,10 +61,10 @@ These are the application image versions and **web login** accounts defined by t
 
 ## Adding a new task
 
-1. Add `<app>/test_cases/<task>.yaml` using [`template.yaml`](template.yaml) and an existing test case as examples. Give each step an action and a specific expectation; add `ground_truth` assertions where they can check the result directly.
+1. Add `<app>/test_cases/<task>.yaml` using [`template.yaml`](template.yaml) and an existing test case as examples. Give each step an action and a specific expectation; add `ground_truth` assertions where they can check the result directly. Every step must have a `solution`: the ground-truth Playwright code that performs the action on `page` (with `expect` and `re` available). Replays run much faster than a person, so end a solution with an `expect` wait when the app updates its state late, for example an editor syncing into a hidden form field. The adapter refuses to generate the benchmark while any step lacks one, and it builds each task's `solution/solve.sh` for Harbor's oracle agent from them. Optionally give each step a `url`, the page path expected after the action (`/books`, `/search?term=`, or a `^...$` regex over the path), which the oracle checks before `ground_truth`.
 2. Set `setup_function` when the task needs a particular logged-in session. The supported functions are registered in [`runtime/init.py`](runtime/init.py).
 3. If the task has an injected bug, add `<app>/bugs/<task>.js` using [`template.js`](template.js). Keep the `// BEGIN` and `// END` markers around both functions.
-4. Run the task through the intended runner to check the setup, each step, and the bug condition.
+4. Run the task through the intended runner to check the setup, each step, and the bug condition. `just exp oracle-task <task>` replays the solution on the generated task and should score `task_completed` 1.
 
 ## Adding a new app
 
