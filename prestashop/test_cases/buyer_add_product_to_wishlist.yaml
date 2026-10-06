@@ -14,7 +14,7 @@ steps:
 - action: Click on the center of the white container with 'My wishlist (4)'
   expectation: A grid of wishlisted products is shown (no need to check details)
   ground_truth: |
-    expect(page.get_by_text("My wishlist", exact=True)).to_be_visible()
+    expect(page.get_by_role("heading", name="My wishlist")).to_be_visible()
 
 - action: Click on 'Clothes' tab in navigation bar
   expectation: A list of products is shown (no need to check details)
@@ -56,4 +56,4 @@ steps:
 - action: Click on the center of the white container with 'My wishlist (4)'
   expectation: The grid of wishlisted products should be equal to initial list plus the new wishlisted product
   ground_truth: |
-    expect(page.get_by_text("My wishlist", exact=True)).to_be_visible()
+    expect(page.get_by_role("heading", name="My wishlist")).to_be_visible()

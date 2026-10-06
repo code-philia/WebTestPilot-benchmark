@@ -20,7 +20,7 @@ steps:
   expectation: Both 'Invoices' and 'Recurring Invoices' toggle button are untoggled
   ground_truth: |
     def expect_switch(label_text, expected_state: bool):
-        dt = page.locator(f"dt:has-text('{label_text}')")
+        dt = page.locator(f"dt:has(> span:text-is('{label_text}'))")
         button = dt.locator("xpath=following-sibling::dd//button[@role='switch']")
         expect(button).to_have_attribute("aria-checked", str(expected_state).lower())
 
