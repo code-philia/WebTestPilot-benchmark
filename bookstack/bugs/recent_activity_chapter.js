@@ -1,19 +1,16 @@
 // BEGIN isConditionMet
 const isConditionMet = () => {
-  const allExist = Array.from(document.querySelectorAll('h5'))
-    .some(h => h.textContent.trim() === 'Recent Activity') &&
-    Array.from(document.querySelectorAll('h5'))
+  // A chapter page with its Details block (chapter pages have no Recent Activity list).
+  const onChapter = /^\/books\/[^/]+\/chapter\/[^/]+\/?$/.test(window.location.pathname);
+  const details = Array.from(document.querySelectorAll('h5'))
     .some(h => h.textContent.trim() === 'Details');
-
-  return allExist;
+  return onChapter && details && !!document.querySelector('.entity-meta');
 };
 // END isConditionMet
 
 // BEGIN onConditionMet
 const onConditionMet = () => {
-  const timestampSpans = document.querySelectorAll(
-    '#details span, #recent-activity span.text-muted small'
-  );
+  const timestampSpans = document.querySelectorAll('.entity-meta span');
 
   timestampSpans.forEach(span => {
     const text = span.textContent;

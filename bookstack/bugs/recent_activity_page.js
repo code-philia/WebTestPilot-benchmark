@@ -1,40 +1,23 @@
 // BEGIN isConditionMet
 const isConditionMet = () => {
-  const allExist = Array.from(document.querySelectorAll('h5'))
-    .some(h => h.textContent.trim() === 'Recent Activity') &&
-    Array.from(document.querySelectorAll('h5'))
-    .some(h => h.textContent.trim() === 'Details');
-
-  return allExist;
+  const detailsHeading = document.querySelector('#page-details h5');
+  return detailsHeading && detailsHeading.textContent.trim() === "Details";
 };
 // END isConditionMet
 
 // BEGIN onConditionMet
 const onConditionMet = () => {
-  const timestampSpans = document.querySelectorAll(
-    '#details span, #recent-activity span.text-muted small'
-  );
+  const timestampSpans = document.querySelectorAll('#page-details span');
 
   timestampSpans.forEach(span => {
     const text = span.textContent;
 
-    // Match ONLY "N hour ago" or "N hours ago"
-    const match = text.match(/\b(\d+)\s+(second|minute|hour|day)s?\s+ago\b/i);
+    // Match "N hour ago" or "N hours ago"
+    const updated = text.replace(/\b(\d+)\s+(second|minute|hour|day)s?\s+ago\b/i, '2 days ago');
 
-    if (match) {
-      // Replace only the matched phrase
-      const updated = text.replace(match[0], '2 days ago');
+    if (updated !== text) {
       span.textContent = updated;
-
-      // Update tooltip if present
-      if (span.hasAttribute('title')) {
-        const titleText = span.getAttribute('title');
-        const updatedTitle = titleText.replace(/\b\d+\s+hours?\s+ago\b/, '2 days ago');
-        span.setAttribute('title', updatedTitle);
-      }
     }
   });
-
-  console.log("All hour-based timestamps updated!");
 };
 // END onConditionMet
