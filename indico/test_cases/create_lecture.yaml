@@ -5,28 +5,46 @@ steps:
   expectation: A dropdown is shown with three options for creating a lecture, a meeting, or a conference
   ground_truth: |
     expect(page.get_by_role("link", name="Create lecture").or_(page.get_by_role("link", name="Lecture", exact=True))).to_be_visible()
+  url: /
+  solution: |
+    page.locator("ind-menu").filter(has_text="Create event").click()
 
 - action: Click option to create lecture in dropdown
   expectation: A dialog form with title 'Create new lecture' is shown (no need to check details)
   ground_truth: |
     expect(page.get_by_text("Create new lecture")).to_be_visible()
+  url: /
+  solution: |
+    page.get_by_role("link", name="Create lecture").click()
 
 - action: Type 'New Lecture' in 'Event title'
   expectation: Event title field contains typed text
   ground_truth: |
     expect(page.get_by_role("textbox", name="Event title")).to_have_value("New Lecture")
+  url: /
+  solution: |
+    page.get_by_role("textbox", name="Event title").fill("New Lecture")
 
 - action: Set 'Protection mode' to 'Public'
   expectation: A dialog form with title 'Create new conference' is shown (no need to check details)
   ground_truth: |
     expect(page.locator("#form-group-event-creation-protection_mode")).to_contain_text("public")
+  url: /
+  solution: |
+    page.locator("#event-creation-protection_mode").get_by_text("Public").click()
 
 - action: Click 'Create event'
   expectation: An event settings page for the created event is shown
   ground_truth: |
     expect(page.locator(".title-with-actions")).to_be_visible()
+  url: '^\/event\/(19|[2-9]\d|\d{3,})\/manage\/$'
+  solution: |
+    page.get_by_role("button", name="Create event", exact=True).click()
 
 - action: Click 'Home' in top navigation bar
   expectation: All events list should be equal to initial list plus the created event
   ground_truth: |
     expect(page.get_by_role("heading", name="All events")).to_be_visible()
+  url: /
+  solution: |
+    page.locator("#global-menu").get_by_role("link", name="Home").click()

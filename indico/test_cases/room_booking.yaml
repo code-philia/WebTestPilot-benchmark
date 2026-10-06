@@ -5,8 +5,14 @@ steps:
   expectation: A panel with title 'Start your booking...' is visible
   ground_truth: |
     expect(page.get_by_text("Start your booking...")).to_be_visible()
+  url: /rooms/book
+  solution: |
+    page.get_by_role("link", name="Room booking").click()
 
 - action: Wait
   expectation: A page with title 'Room Booking' is shown
   ground_truth: |
     expect(page.get_by_text("Start your booking...")).to_be_visible()
+  url: /rooms/book
+  solution: |
+    page.wait_for_load_state()

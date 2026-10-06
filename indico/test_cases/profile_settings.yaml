@@ -5,23 +5,38 @@ steps:
   expectation: A page with title 'Dashboard' is shown (no need to check details)
   ground_truth: |
     expect(page.get_by_role("heading", name="Admin User")).to_be_visible()
+  url: /user/dashboard/
+  solution: |
+    page.get_by_role("link", name="My profile").click()
 
 - action: Click on 'Settings' button
   expectation: My profile settings form with 'Email address' field is shown
   ground_truth: |
     expect(page.get_by_role("textbox", name="First name *")).to_have_value("Admin")
+  url: /user/profile/
+  solution: |
+    page.get_by_role("link", name="Settings").click()
 
 - action: Click on 'Preferences' in the sidebar
   expectation: My preferences form with 'Save' button is shown
   ground_truth: |
     expect(page.get_by_role("main")).to_contain_text("Preferences")
+  url: /user/preferences/
+  solution: |
+    page.get_by_role("link", name="Preferences").click()
 
 - action: Click on 'Data export' in the sidebar
   expectation: An 'Export my data' button is shown
   ground_truth: |
     expect(page.locator("#data-export-container")).to_contain_text("Data export")
+  url: /user/data-export
+  solution: |
+    page.get_by_role("link", name="Data export").click()
 
 - action: Click on 'Favourites' in the sidebar
   expectation: An 'Add Indico user' button is shown
   ground_truth: |
     expect(page.get_by_role("main")).to_contain_text("Favorite Users")
+  url: /user/favorites
+  solution: |
+    page.get_by_role("link", name="Favourites").click()
