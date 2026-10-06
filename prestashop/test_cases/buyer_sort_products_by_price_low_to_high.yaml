@@ -3,7 +3,7 @@ setup_function: login_to_prestashop_as_buyer
 steps:
 - action: Click 'Art' tab in the navigation bar
   expectation: A grid of products under 'Art' category is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Art")).to_be_visible()
   url: /9-art
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Click on 'Studio Design' in the 'Brands' sidebar
   expectation: A list of products by brand 'Studio Design' is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.locator("h1")).to_contain_text("List of products by brand Studio Design")
   url: /brand/1-studio-design
   solution: |
@@ -19,7 +19,7 @@ steps:
 
 - action: Click on 'Sort by' dropdown
   expectation: A dropdown of sort options is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("link", name="Price, low to high")).to_be_visible()
   url: /brand/1-studio-design
   solution: |
@@ -27,7 +27,7 @@ steps:
 
 - action: Click on 'Price, low to high' option
   expectation: The products are correctly sorted by 'Price, low to high', and must be extracted in row-major order (left-to-right within each row, top-to-bottom across rows) (no need to get image)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_label("Sort by selection")).to_contain_text("Price, low to high")
   url: /brand/1-studio-design
   solution: |

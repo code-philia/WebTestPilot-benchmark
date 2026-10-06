@@ -3,7 +3,7 @@ setup_function: login_to_prestashop_as_buyer
 steps:
 - action: Scroll the page down
   expectation: A page full of products is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("link", name="Mug The best is yet to come").first).to_be_visible()
   url: /
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Click on the 'The Best Is Yet To Come' mug
   expectation: Product details page with comments section is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Mug The best is yet to come")).to_be_visible()
   url: /home-accessories/6-mug-the-best-is-yet-to-come.html
   solution: |
@@ -19,7 +19,7 @@ steps:
 
 - action: Click on the 'Home' breadcrumb
   expectation: The products shown is consistent before and after user activity
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Popular Products")).to_be_visible()
   url: /
   solution: |

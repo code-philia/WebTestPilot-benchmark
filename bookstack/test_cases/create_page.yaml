@@ -3,7 +3,7 @@ setup_function: login_to_bookstack
 steps:
 - action: Click 'Books' link in navigation
   expectation: Books listing page appears
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Books", exact=True)).to_be_visible()
   url: /books
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Click on book title 'Book'
   expectation: Page contains title 'Book'
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Book")).to_be_visible()
   url: /books/book
   solution: |
@@ -19,7 +19,7 @@ steps:
 
 - action: Click on 'New Page' link
   expectation: WYSIWYG editor is present with 'New Page' as title
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("textbox", name="Page Title")).to_have_value("New Page")
   url: '^\/books\/book\/draft\/\d+$'
   solution: |
@@ -27,7 +27,7 @@ steps:
 
 - action: Type 'New page content' in editor area
   expectation: Editor area contains typed text
-  ground_truth: |
+  action_check: |
     expect(page.locator("iframe[title=\"Rich Text Area\"]").content_frame.locator("html")).to_contain_text("New page content")
   url: '^\/books\/book\/draft\/\d+$'
   solution: |
@@ -35,7 +35,7 @@ steps:
 
 - action: Click 'Save Page' button
   expectation: The new page should have no comments
-  ground_truth: |
+  action_check: |
     expect(page.locator("#bkmrk-page-title")).to_be_visible()
   url: /books/book/page/new-page
   solution: |

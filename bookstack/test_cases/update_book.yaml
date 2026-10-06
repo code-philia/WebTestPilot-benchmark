@@ -3,7 +3,7 @@ setup_function: login_to_bookstack
 steps:
 - action: From the dashboard click 'Books' link in navigation
   expectation: Books listing page appears
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Books", exact=True)).to_be_visible()
   url: /books
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Click on book title 'Book'
   expectation: Page contains title 'Book'
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Book")).to_be_visible()
   url: /books/book
   solution: |
@@ -19,7 +19,7 @@ steps:
 
 - action: Click on 'Edit' link
   expectation: Edit book form is present with 'Book' in name field
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("textbox", name="Name")).to_have_value("Book")
   url: /books/book/edit
   solution: |
@@ -27,7 +27,7 @@ steps:
 
 - action: Replace Name field with 'Updated Book'
   expectation: Name field contains replaced text
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("textbox", name="Name")).to_have_value("Updated Book")
   url: /books/book/edit
   solution: |
@@ -35,7 +35,7 @@ steps:
 
 - action: Replace Description field with 'Updated Book Description'
   expectation: Description textarea contains replaced text
-  ground_truth: |
+  action_check: |
     expect(page.locator("iframe[title=\"Rich Text Area\"]").content_frame.get_by_role("paragraph")).to_contain_text("Updated Book Description")
   url: /books/book/edit
   solution: |
@@ -43,7 +43,7 @@ steps:
 
 - action: Scroll the page down
   expectation: '''Cancel'' and ''Save Book'' buttons are visible'
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("button", name="Save Book")).to_be_visible()
   url: /books/book/edit
   solution: |
@@ -51,7 +51,7 @@ steps:
 
 - action: Click 'Save Book' button
   expectation: Page title contains 'Updated Book'
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Updated Book")).to_be_visible()
   url: /books/updated-book
   solution: |
@@ -59,7 +59,7 @@ steps:
 
 - action: Click 'Books' link in navigation
   expectation: Books list before and after is consistent with user activities
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("main")).to_contain_text("Updated Book")
   url: /books
   solution: |

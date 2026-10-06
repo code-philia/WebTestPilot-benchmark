@@ -3,7 +3,7 @@ setup_function: login_to_indico
 steps:
 - action: Click on 'Administration' in the top navigation bar
   expectation: A message 'A new Indico version...' is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="General Settings")).to_be_visible()
   url: /admin/settings/
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Click on 'User Management' in the sidebar
   expectation: The 'User Management' section is expanded (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("link", name="Users")).to_be_visible()
   url: /admin/settings/
   solution: |
@@ -19,7 +19,7 @@ steps:
 
 - action: Click on 'Users' under 'User Management' in the sidebar
   expectation: A panel with title 'Manage users' is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_text("Manage users")).to_be_visible()
   url: /admin/users/
   solution: |
@@ -27,7 +27,7 @@ steps:
 
 - action: Click on 'Customisation' in the sidebar
   expectation: The 'Customisation' section is expanded (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("link", name="Document Templates")).to_be_visible()
   url: /admin/users/
   solution: |
@@ -35,7 +35,7 @@ steps:
 
 - action: Click on 'Document Templates' under 'Customisation' in the sidebar
   expectation: A red warning message with 'Danger zone' is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Document Templates")).to_be_visible()
   url: /admin/receipts/
   solution: |
@@ -43,7 +43,7 @@ steps:
 
 - action: Click on 'Payment' under 'Customisation' in the sidebar
   expectation: A page with title 'Payment' and 'Save' button is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Payment")).to_be_visible()
   url: /admin/payment/
   solution: |
@@ -51,7 +51,7 @@ steps:
 
 - action: Click on 'Unlisted events' under 'Customisation' in the sidebar
   expectation: A page with title 'Unlisted events' and an 'Enabled' toggle button with 'Save' button is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Unlisted events")).to_be_visible()
   url: /admin/unlisted-events/
   solution: |

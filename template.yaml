@@ -3,6 +3,6 @@ setup_function:
 steps:
 - action: 
   expectation: 
-  ground_truth: |
+  action_check: |
   url: 
   solution: |

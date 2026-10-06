@@ -3,7 +3,7 @@ setup_function: login_to_prestashop_as_seller
 steps:
 - action: Click on 'Catalog' in sidebar
   expectation: The page contains title 'Dashboard'
-  ground_truth: |
+  action_check: |
     expect(page.locator("#subtab-AdminProducts").get_by_role("link", name="Products")).to_be_visible()
   url: '^/webtestpilot/index\.php\?controller=AdminDashboard&token=[^&#]+$'
   solution: |
@@ -12,7 +12,7 @@ steps:
 
 - action: Click on 'Products' under 'Catalog'
   expectation: A products list is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Products", exact=True)).to_be_visible()
   url: '^/webtestpilot/index\.php/sell/catalog/products-v2/\?_token=[^&#]+$'
   solution: |
@@ -20,7 +20,7 @@ steps:
 
 - action: Click on the ID 19, which is the first product
   expectation: The product details page with 'Product name' and 'Summary' is shown 
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Summary")).to_be_visible()
   url: '^/webtestpilot/index\.php/sell/catalog/products-v2/19/edit\?_token=[^&#]+$'
   solution: |
@@ -28,7 +28,7 @@ steps:
 
 - action: At the bottom of the page, next to 'Go to catalog' button, click triple dots
   expectation: A dropdown containing 'Delete' is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("button", name="delete Delete")).to_be_visible()
   url: '^/webtestpilot/index\.php/sell/catalog/products-v2/19/edit\?_token=[^&#]+$'
   solution: |
@@ -36,7 +36,7 @@ steps:
 
 - action: Click on 'Delete' option 
   expectation: A dialog with title 'Permanently delete this product?' is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Permanently delete this")).to_be_visible()
   url: '^/webtestpilot/index\.php/sell/catalog/products-v2/19/edit\?_token=[^&#]+$'
   solution: |
@@ -44,7 +44,7 @@ steps:
 
 - action: Click on 'Delete'
   expectation: The products list should be equal to initial list minus the delete product
-  ground_truth: |
+  action_check: |
     expect(page.get_by_text("Successful deletion")).to_be_visible()
   url: '^/webtestpilot/index\.php/sell/catalog/products-v2/\?_token=[^&#]+$'
   solution: |

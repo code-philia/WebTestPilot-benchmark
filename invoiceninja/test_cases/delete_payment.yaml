@@ -3,7 +3,7 @@ setup_function: login_to_invoiceninja
 steps:
 - action: From the dashboard click 'Payments' in the sidebar
   expectation: A table of payments is shown (no need to check columns)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Payments")).to_be_visible()
   url: /payments
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Check the checkbox of the first row in the table
   expectation: The checkbox becomes checked, 'Actions' dropdown button becomes enabled
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("button", name="Actions").first).to_be_enabled()
   url: /payments
   solution: |
@@ -19,7 +19,7 @@ steps:
 
 - action: Click on the 'Actions' dropdown button
   expectation: A dropdown containing 'Delete' option is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("button", name="Delete")).to_be_visible()
   url: /payments
   solution: |
@@ -27,7 +27,7 @@ steps:
 
 - action: Click on the 'Delete' option
   expectation: The checked row is no longer visible
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("cell", name="0001")).not_to_be_visible()
   url: /payments
   solution: |
@@ -35,7 +35,7 @@ steps:
 
 - action: Click on 'Dashboard' in the sidebar
   expectation: The 'Recent Payments' in dashboard should be equal to previous list minus the deleted payment
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Dashboard")).to_be_visible()
   url: /dashboard
   solution: |

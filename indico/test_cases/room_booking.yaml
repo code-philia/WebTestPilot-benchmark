@@ -3,7 +3,7 @@ setup_function: login_to_indico
 steps:
 - action: Click on 'Room Booking' in the top navigation bar
   expectation: A panel with title 'Start your booking...' is visible
-  ground_truth: |
+  action_check: |
     expect(page.get_by_text("Start your booking...")).to_be_visible()
   url: /rooms/book
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Wait
   expectation: A page with title 'Room Booking' is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_text("Start your booking...")).to_be_visible()
   url: /rooms/book
   solution: |

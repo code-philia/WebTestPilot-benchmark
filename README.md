@@ -19,21 +19,19 @@ There are 100 test cases across BookStack, Indico, Invoice Ninja, and PrestaShop
 
 ## Test case format
 
-Each YAML file describes one task. `steps` is an ordered list: `action` tells the tester what to do, `expectation` states the expected visible result, and `ground_truth` optionally supplies a Playwright Python assertion for that result.
+Each YAML file describes one task. `steps` is an ordered list: `action` tells the tester what to do and `expectation` states the expected visible result. The remaining step fields are ground truth that only the benchmark's oracle sees: `solution` performs the action, `url` and `action_check` judge whether the action reached the right state.
 
 ```yaml
 name: Comment
 setup_function: login_to_bookstack
 steps:
-  - action: From the dashboard click 'Page Template' link
-    expectation: Page contains title 'Page Template'
-    ground_truth: |
-      expect(page.locator("#bkmrk-page-title")).to_match_aria_snapshot("- heading \"Page Template\" [level=1]")
-
-  - action: Click 'Add Comment'
-    expectation: A WYSIWYG comment editor is open
-    ground_truth: |
-      expect(page.get_by_role("button", name="Save Comment")).to_be_visible()
+- action: From the dashboard click 'Page Template' link
+  expectation: Page contains title 'Page Template'
+  action_check: |
+    expect(page.locator("#bkmrk-page-title")).to_match_aria_snapshot("- heading \"Page Template\" [level=1]")
+  url: /books/book/page/page-template
+  solution: |
+    page.locator("#recently-viewed").get_by_role("link", name="Page Template").click()
 ```
 
 | Field | Meaning |
@@ -43,7 +41,9 @@ steps:
 | `description` | Optional description of the task. |
 | `steps[].action` | Action to perform in the browser. |
 | `steps[].expectation` | Expected result in natural language. |
-| `steps[].ground_truth` | Optional Playwright Python assertion snippet. |
+| `steps[].action_check` | Optional Playwright Python assertion that the action reached the right state. It must only read the page, and it must pass whether or not the task's bug is injected: it judges the action, not the app. |
+| `steps[].url` | Optional page path expected after the action, checked before `action_check`. |
+| `steps[].solution` | Required Playwright code that performs the action on `page`. |
 
 The filename stem is the stable task identifier. Use a unique stem within each app, and keep a matching bug script under `bugs/` when testing bug detection. A bug script contains `isConditionMet` and `onConditionMet` blocks delimited by the markers shown in [`template.js`](template.js).
 
@@ -61,7 +61,7 @@ These are the application image versions and **web login** accounts defined by t
 
 ## Adding a new task
 
-1. Add `<app>/test_cases/<task>.yaml` using [`template.yaml`](template.yaml) and an existing test case as examples. Give each step an action and a specific expectation; add `ground_truth` assertions where they can check the result directly. Every step must have a `solution`: the ground-truth Playwright code that performs the action on `page` (with `expect` and `re` available). Replays run much faster than a person, so end a solution with an `expect` wait when the app updates its state late, for example an editor syncing into a hidden form field. The adapter refuses to generate the benchmark while any step lacks one, and it builds each task's `solution/solve.sh` for Harbor's oracle agent from them. Optionally give each step a `url`, the page path expected after the action (`/books`, `/search?term=`, or a `^...$` regex over the path), which the oracle checks before `ground_truth`.
+1. Add `<app>/test_cases/<task>.yaml` using [`template.yaml`](template.yaml) and an existing test case as examples. Give each step an action and a specific expectation; add `action_check` assertions where they can check the action's result directly. Every step must have a `solution`: the ground-truth Playwright code that performs the action on `page` (with `expect` and `re` available). Replays run much faster than a person, so end a solution with an `expect` wait when the app updates its state late, for example an editor syncing into a hidden form field. The adapter refuses to generate the benchmark while any step lacks one, and it builds each task's `solution/solve.sh` for Harbor's oracle agent from them. Optionally give each step a `url`, the page path expected after the action (`/books`, `/search?term=`, or a `^...$` regex over the path), which the oracle checks before `action_check`.
 2. Set `setup_function` when the task needs a particular logged-in session. The supported functions are registered in [`runtime/init.py`](runtime/init.py).
 3. If the task has an injected bug, add `<app>/bugs/<task>.js` using [`template.js`](template.js). Keep the `// BEGIN` and `// END` markers around both functions.
 4. Run the task through the intended runner to check the setup, each step, and the bug condition. `just exp oracle-task <task>` replays the solution on the generated task and should score `task_completed` 1.

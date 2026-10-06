@@ -3,7 +3,7 @@ setup_function: login_to_invoiceninja
 steps:
 - action: From the dashboard click 'Quotes' in the sidebar
   expectation: The 'Sent' quote number(s) is consistent with 'Upcoming Quotes' on the dashboard
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Quotes")).to_be_visible()
   url: /quotes
   solution: |

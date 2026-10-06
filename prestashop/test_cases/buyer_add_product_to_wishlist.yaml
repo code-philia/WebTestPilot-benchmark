@@ -3,7 +3,7 @@ setup_function: login_to_prestashop_as_buyer
 steps:
 - action: Click on 'Auto Customer' in the top navigation bar
   expectation: A page with title 'Your account' is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Your account")).to_be_visible()
   url: /my-account
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Click on 'My Wishlists'
   expectation: A list of wishlist folder(s) is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="My wishlists")).to_be_visible()
   url: /module/blockwishlist/lists
   solution: |
@@ -19,7 +19,7 @@ steps:
 
 - action: Click on the center of the white container with 'My wishlist (4)'
   expectation: A grid of wishlisted products is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="My wishlist")).to_be_visible()
   url: /module/blockwishlist/view?id_wishlist=1
   solution: |
@@ -27,7 +27,7 @@ steps:
 
 - action: Click on 'Clothes' tab in navigation bar
   expectation: A list of products is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Clothes")).to_be_visible()
   url: /3-clothes
   solution: |
@@ -35,7 +35,7 @@ steps:
 
 - action: Scroll the page down
   expectation: A list of products is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_text("Hummingbird printed t-shirt")).to_be_visible()
   url: /3-clothes
   solution: |
@@ -43,7 +43,7 @@ steps:
 
 - action: Click on the heart icon for 'Hummingbird printed t-shirt' product
   expectation: A dialog box with title 'My wishlists' is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("listitem").filter(has_text="My wishlist")).to_be_visible()
   url: /3-clothes
   solution: |
@@ -51,7 +51,7 @@ steps:
 
 - action: Click on 'My wishlist' list item under 'My wishlists'
   expectation: The dialog box with title 'My wishlists' is no longer visible
-  ground_truth: |
+  action_check: |
     product = page.locator(".js-product").nth(0)  # or your specific product
     icon = product.locator("button.wishlist-button-add i.material-icons")
     expect(icon).to_have_text("favorite")
@@ -61,7 +61,7 @@ steps:
 
 - action: Scroll Up
   expectation: A list of products is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Clothes")).to_be_visible()
   url: /3-clothes
   solution: |
@@ -69,7 +69,7 @@ steps:
 
 - action: Click on 'Auto Customer' in the top navigation bar
   expectation: A page with title 'Your account' is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Your account")).to_be_visible()
   url: /my-account
   solution: |
@@ -77,7 +77,7 @@ steps:
 
 - action: Click on 'My Wishlists'
   expectation: A list of wishlist folder(s) is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="My wishlists")).to_be_visible()
   url: /module/blockwishlist/lists
   solution: |
@@ -85,7 +85,7 @@ steps:
 
 - action: Click on the center of the white container with 'My wishlist (5)'
   expectation: The grid of wishlisted products should be equal to initial list plus the new wishlisted product
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="My wishlist")).to_be_visible()
   url: /module/blockwishlist/view?id_wishlist=1
   solution: |

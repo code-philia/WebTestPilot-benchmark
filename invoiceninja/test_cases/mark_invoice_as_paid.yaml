@@ -3,7 +3,7 @@ setup_function: login_to_invoiceninja
 steps:
 - action: From the dashboard click 'Invoices' in the sidebar
   expectation: A table of invoices is shown (no need to check columns)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Invoices")).to_be_visible()
   url: /invoices
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Click on the invoice number '123456_sent'
   expectation: The 'Edit Invoice' page is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.locator("#number")).to_have_value("123456_sent")
   url: /invoices/Wpmbk5ezJn/edit
   solution: |
@@ -19,7 +19,7 @@ steps:
 
 - action: Click on dropdown button to the right of 'Save'
   expectation: A dropdown containing 'Mark Paid' option is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("button", name="Mark Paid")).to_be_visible()
   url: /invoices/Wpmbk5ezJn/edit
   solution: |
@@ -27,7 +27,7 @@ steps:
 
 - action: Click on the 'Mark Paid' button
   expectation: The invoice status is marked as 'Paid'
-  ground_truth: |
+  action_check: |
     expect(page.get_by_text("Paid", exact=True)).to_be_visible()
   url: /invoices/Wpmbk5ezJn/edit
   solution: |
@@ -35,7 +35,7 @@ steps:
 
 - action: Click on 'Dashboard' in the sidebar
   expectation: The 'Upcoming Invoices' panel no longer contains any invoices
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Dashboard")).to_be_visible()
   url: /dashboard
   solution: |

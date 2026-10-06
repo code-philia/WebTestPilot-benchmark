@@ -3,7 +3,7 @@ setup_function: login_to_invoiceninja
 steps:
 - action: From the dashboard click 'Recurring Invoices' in the sidebar
   expectation: A table of recurring invoices is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Recurring Invoices")).to_be_visible()
   url: /recurring_invoices
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Check the checkbox of recurring invoice number '123456' in the table
   expectation: The checkbox becomes checked, 'Actions' dropdown button becomes enabled
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("button", name="Actions").first).to_be_enabled()
   url: /recurring_invoices
   solution: |
@@ -19,7 +19,7 @@ steps:
 
 - action: Click on the 'Actions' dropdown button
   expectation: A dropdown containing 'Stop' option is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("button", name="Stop")).to_be_visible()
   url: /recurring_invoices
   solution: |
@@ -27,7 +27,7 @@ steps:
 
 - action: Click on the 'Stop' button
   expectation: The status of the invoice changes to 'Paused'
-  ground_truth: |
+  action_check: |
     expect(page.get_by_text("Paused")).to_be_visible()
   url: /recurring_invoices
   solution: |
@@ -35,7 +35,7 @@ steps:
 
 - action: Click on 'Dashboard' in the sidebar
   expectation: The 'Upcoming Recurring Invoices' panel no longer contains invoices
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Dashboard")).to_be_visible()
   url: /dashboard
   solution: |

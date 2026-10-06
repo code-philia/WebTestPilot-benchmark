@@ -3,7 +3,7 @@ setup_function: login_to_invoiceninja
 steps:
 - action: Click 'Products' in the sidebar
   expectation: A table of products with 10 rows and pagination at the bottom is shown 
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Products")).to_be_visible()
   url: /products
   solution: |

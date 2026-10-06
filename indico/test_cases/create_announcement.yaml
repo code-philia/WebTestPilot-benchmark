@@ -3,7 +3,7 @@ setup_function: login_to_indico
 steps:
 - action: Click on 'Administration' in the top navigation bar
   expectation: A message 'A new Indico version...' is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="General Settings")).to_be_visible()
   url: /admin/settings/
   solution: |
@@ -11,7 +11,7 @@ steps:
 
 - action: Click on 'Homepage' in the sidebar
   expectation: The 'Homepage' section is expanded (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("link", name="Announcement")).to_be_visible()
   url: /admin/settings/
   solution: |
@@ -19,7 +19,7 @@ steps:
 
 - action: Click on 'Announcement' under 'Homepage' in the sidebar
   expectation: A page with title 'Announcement' is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Announcement")).to_be_visible()
   url: /admin/announcement
   solution: |
@@ -27,7 +27,7 @@ steps:
 
 - action: Click on the 'Enabled' toggle button
   expectation: A page with title 'Announcement' is shown (no need to check details)
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("checkbox", name="Enabled")).to_be_checked()
   url: /admin/announcement
   solution: |
@@ -35,7 +35,7 @@ steps:
 
 - action: Type 'Big Announcement' in 'Message' field
   expectation: The 'Message' field contains typed text
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("textbox", name="Message")).to_have_value("Big Announcement")
   url: /admin/announcement
   solution: |
@@ -43,7 +43,7 @@ steps:
 
 - action: Click 'Save'
   expectation: A 'Settings have been saved' success message is shown
-  ground_truth: |
+  action_check: |
     expect(page.get_by_text("Settings have been saved")).to_be_visible()
   url: /admin/announcement
   solution: |
@@ -51,7 +51,7 @@ steps:
 
 - action: Click 'Home' in top navigation bar
   expectation: All events list should be equal to initial list
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="All events")).to_be_visible()
   url: /
   solution: |

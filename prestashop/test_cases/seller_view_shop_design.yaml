@@ -3,7 +3,7 @@ setup_function: login_to_prestashop_as_seller
 steps:
 - action: Click on 'Design' in sidebar
   expectation: The page contains title 'Dashboard'
-  ground_truth: |
+  action_check: |
     expect(page.locator("#subtab-AdminThemesParent").get_by_role("link", name="Theme & Logo")).to_be_visible()
   url: '^/webtestpilot/index\.php\?controller=AdminDashboard&token=[^&#]+$'
   solution: |
@@ -12,7 +12,7 @@ steps:
 
 - action: Click on 'Theme & Logo' 
   expectation: A 'Choose layouts' button is visible
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Theme & Logo > Theme")).to_be_visible()
   url: '^/webtestpilot/index\.php/improve/design/themes/\?_token=[^&#]+$'
   solution: |
@@ -20,7 +20,7 @@ steps:
 
 - action: Click on 'Pages Configuration' tab
   expectation: A 'See all theme's modules' button is visible
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Pages Configuration")).to_be_visible()
   url: '^/webtestpilot/index\.php\?controller=AdminPsThemeCustoConfiguration&token=[^&#]+$'
   solution: |
@@ -28,7 +28,7 @@ steps:
 
 - action: Click on 'Email Theme' in sidebar
   expectation: A 'Generate emails' button is visible
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Email Theme", exact=True)).to_be_visible()
   url: '^/webtestpilot/index\.php/improve/design/mail_theme/\?_token=[^&#]+$'
   solution: |
@@ -36,7 +36,7 @@ steps:
 
 - action: Click on 'Pages' in sidebar 
   expectation: A 'Pages in category Home' pages list is visible 
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Pages", exact=True)).to_be_visible()
   url: '^/webtestpilot/index\.php/improve/design/cms-pages/\?_token=[^&#]+$'
   solution: |
@@ -44,7 +44,7 @@ steps:
 
 - action: Click on 'Image Settings' in sidebar
   expectation: An 'Add new image type' button is visible
-  ground_truth: |
+  action_check: |
     expect(page.get_by_role("heading", name="Image Settings")).to_be_visible()
   url: '^/webtestpilot/index\.php\?controller=AdminImages&token=[^&#]+$'
   solution: |
