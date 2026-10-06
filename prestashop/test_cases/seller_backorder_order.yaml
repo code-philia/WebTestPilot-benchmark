@@ -11,7 +11,7 @@ steps:
   ground_truth: |
     expect(page.get_by_role("link", name="Orders", exact=True)).to_be_visible()
 
-- action: Click on the order ID '5' with reference 'KHWLILZLL'
+- action: Click on the order with reference 'KHWLILZLL'
   expectation: The order details page displays the numerical subtotal as '27.30' within tolerance
   ground_truth: |
     expect(page.locator("body")).to_contain_text("€27.30")
@@ -31,12 +31,7 @@ steps:
   ground_truth: |
     expect(page.locator("#update_order_status_action_input_wrapper").get_by_role("combobox", name="On backorder (not paid)")).to_be_visible()
 
-- action: Click on the order ID '5' with reference 'KHWLILZLL' to go back to the order details page
-  expectation: The order 5 detail page shows the status 'On backorder (not paid)'
-  ground_truth: |
-    expect(page.locator("#update_order_status_action_input_wrapper").get_by_role("combobox", name="On backorder (not paid)")).to_be_visible()
-
-- action: Wait
-  expectation: All status records on the page align with the update
+- action: Scroll down
+  expectation: The records in the timeline under the "Status" tab aligns with the update
   ground_truth: |
     expect(page.locator("#update_order_status_action_input_wrapper").get_by_role("combobox", name="On backorder (not paid)")).to_be_visible()

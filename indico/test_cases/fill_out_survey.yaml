@@ -16,7 +16,7 @@ steps:
   ground_truth: |
     expect(page.get_by_role("spinbutton", name="Number Question")).to_have_value("33")
 
-- action: Select Options 1-3 in Multiple Choice Question
+- action: Select Options 1, 2, and 3 in Multiple Choice Question
   expectation: Selected options are checked
   ground_truth: |
     [expect(page.get_by_role("checkbox", name=n)).to_be_checked() for n in ["Option 1", "Option 2", "Option 3"]]
