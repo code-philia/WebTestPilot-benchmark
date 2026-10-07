@@ -129,6 +129,9 @@
   // Prevents concurrent condition checks when a series of DOM mutation events happen
   let checkScheduled = false;
 
+  // Set when mutations arrive while a check is scheduled, so they get one more check.
+  let recheckPending = false;
+
   // MutationObserver for DOM mutation events
   let mutationObserver = null;
 
@@ -189,14 +192,26 @@
         return;
       }
 
-      // Coalesce multiple mutations into one check per animation frame
-      if (checkScheduled) return;
+      // Coalesce multiple mutations into one check per animation frame, plus a
+      // trailing check for mutations that arrive in between: otherwise the
+      // element the condition waits for (e.g. a list filled in by XHR) can land
+      // in that gap, the page goes quiet, and the condition is never seen.
+      if (checkScheduled) {
+        recheckPending = true;
+        return;
+      }
 
       checkScheduled = true;
       handleDetection();
 
-      // Allow next burst of mutations to trigger check
-      requestAnimationFrame(() => {
+      requestAnimationFrame(function release() {
+        if (recheckPending && !conditionMet) {
+          recheckPending = false;
+          handleDetection();
+          requestAnimationFrame(release);
+          return;
+        }
+        recheckPending = false;
         checkScheduled = false;
       });
     });
