@@ -64,3 +64,9 @@ steps:
   url: /books
   solution: |
     page.locator("#header").get_by_role("link", name="Books", exact=True).click()
+
+assertion_check: |
+  # The books list is the seeded books with 'Book' renamed 'Updated Book'.
+  expect(page.locator("main .grid-card h2")).to_have_text(["Book1", "Book2", "Updated Book"])
+  updated = page.locator("main a.grid-card").filter(has=page.get_by_role("heading", name="Updated Book", exact=True))
+  expect(updated.locator("p.text-muted").first).to_have_text("Updated Book Description")

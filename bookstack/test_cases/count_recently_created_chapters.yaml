@@ -16,3 +16,7 @@ steps:
   url: /user/admin
   solution: |
     page.get_by_role("link", name="View Profile").click()
+
+assertion_check: |
+  # 'Created Content' counts 4 chapters; 'Recently Created Chapters' lists exactly those 4.
+  expect(page.locator("section:has(h2#recent-chapters) .entity-list-item-name")).to_have_text(["Chapter 2", "Chapter 1", "Chapter 2", "Chapter"])

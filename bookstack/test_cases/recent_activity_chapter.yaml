@@ -8,3 +8,10 @@ steps:
   url: '^\/books\/book[12]\/chapter\/chapter-2$'
   solution: |
     page.get_by_role("link", name="Chapter").first.click()
+
+assertion_check: |
+  # The chapter's created/updated times match the dashboard's activity (created within the last day).
+  times = page.locator(".entity-meta span").filter(has_text=re.compile(r"ago"))
+  expect(times).to_have_count(2)
+  for i in range(2):
+      expect(times.nth(i)).to_have_text(re.compile(r"^\d+ (seconds?|minutes?|hours?) ago$|^1 day ago$"))

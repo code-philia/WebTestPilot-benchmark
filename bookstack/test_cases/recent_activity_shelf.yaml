@@ -8,3 +8,10 @@ steps:
   url: /shelves/shelf
   solution: |
     page.locator("#recent-activity").get_by_role("link", name="Shelf").click()
+
+assertion_check: |
+  # The shelf's details and its activity show the same recent times (created within the last day).
+  times = page.locator("#details span, #recent-activity span.text-muted small").filter(has_text=re.compile(r"ago"))
+  expect(times).to_have_count(3)
+  for i in range(3):
+      expect(times.nth(i)).to_have_text(re.compile(r"^\d+ (seconds?|minutes?|hours?) ago$|^1 day ago$"))

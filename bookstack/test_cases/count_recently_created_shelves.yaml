@@ -16,3 +16,7 @@ steps:
   url: /user/admin
   solution: |
     page.get_by_role("link", name="View Profile").click()
+
+assertion_check: |
+  # 'Created Content' counts 1 shelf; 'Recently Created Shelves' lists exactly that one.
+  expect(page.locator("section:has(h2#recent-shelves) .entity-list-item-name")).to_have_text(["Shelf"])

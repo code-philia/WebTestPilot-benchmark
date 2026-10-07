@@ -8,3 +8,10 @@ steps:
   url: /books/book/page/page-template
   solution: |
     page.locator("#recent-activity").get_by_role("link", name="Page Template").click()
+
+assertion_check: |
+  # The template's created/updated times match the dashboard's activity (created within the last day).
+  times = page.locator("#page-details span").filter(has_text=re.compile(r"ago"))
+  expect(times).to_have_count(2)
+  for i in range(2):
+      expect(times.nth(i)).to_have_text(re.compile(r"^\d+ (seconds?|minutes?|hours?) ago$|^1 day ago$"))

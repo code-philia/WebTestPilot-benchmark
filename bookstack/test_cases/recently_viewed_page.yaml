@@ -32,3 +32,7 @@ steps:
   url: /
   solution: |
     page.get_by_role("link", name="Logo BookStack").click()
+
+assertion_check: |
+  # 'Page 1' and 'Book2' moved to the top; every other item keeps its order.
+  expect(page.locator("#recently-viewed .entity-list-item-name")).to_have_text(["Page 1", "Book2", "Shelf", "Page 1", "Book1", "Chapter 2", "Page", "Book", "Page Template", "Page", "Page 2", "Chapter 2"])

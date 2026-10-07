@@ -16,3 +16,7 @@ steps:
   url: /
   solution: |
     page.get_by_role("link", name="Logo BookStack").click()
+
+assertion_check: |
+  # 'Page Template' moved to the top; every other item keeps its order.
+  expect(page.locator("#recently-viewed .entity-list-item-name")).to_have_text(["Page Template", "Shelf", "Page 1", "Book1", "Chapter 2", "Page", "Book", "Page 1", "Page", "Book2", "Page 2", "Chapter 2"])

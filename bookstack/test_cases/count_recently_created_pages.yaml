@@ -24,3 +24,7 @@ steps:
   url: /search?term=%7Bcreated_by%3Aadmin%7D+%7Btype%3Apage%7D
   solution: |
     page.locator("#recent-pages").get_by_role("link", name="View All").click()
+
+assertion_check: |
+  # 'Created Content' counted 6 pages: the search for the user's pages finds exactly 6.
+  expect(page.locator(".book-contents .entity-list .entity-list-item")).to_have_count(6)

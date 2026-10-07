@@ -32,3 +32,7 @@ steps:
   url: /settings/sorting
   solution: |
     page.get_by_role("link", name="Sorting").click()
+
+assertion_check: |
+  expect(page.get_by_role("heading", name="Sorting", exact=True)).to_be_visible()
+  expect(page.get_by_role("link", name="Create Sort Rule")).to_be_visible()

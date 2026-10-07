@@ -32,3 +32,7 @@ steps:
   url: /books
   solution: |
     page.get_by_role("button", name="Confirm").click()
+
+assertion_check: |
+  # The books list is the seeded books minus the deleted 'Book2'.
+  expect(page.locator("main .grid-card h2")).to_have_text(["Book", "Book1"])

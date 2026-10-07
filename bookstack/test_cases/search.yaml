@@ -24,3 +24,7 @@ steps:
   url: /books/book2
   solution: |
     page.get_by_role("link", name="Book2 Description Created").click()
+
+assertion_check: |
+  # Book2 holds exactly the chapters and pages the search found.
+  expect(page.locator("main .entity-list-item-name")).to_have_text(["Chapter 1", "Chapter 2", "Page 1"])

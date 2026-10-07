@@ -56,3 +56,8 @@ steps:
   url: /settings/sorting
   solution: |
     page.get_by_role("button", name="Save").click()
+
+assertion_check: |
+  # The rules list is the seeded 'Rule' plus 'New Sort Rule' sorting by name ascending.
+  expect(page.locator(".item-list-row a")).to_have_text(["New Sort Rule", "Rule"])
+  expect(page.locator(".item-list-row").filter(has_text="New Sort Rule")).to_contain_text("Name - Alphabetical (Asc)")

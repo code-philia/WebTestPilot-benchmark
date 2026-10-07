@@ -16,3 +16,7 @@ steps:
   url: /user/admin
   solution: |
     page.get_by_role("link", name="View Profile").click()
+
+assertion_check: |
+  # 'Created Content' counts 3 books; 'Recently Created Books' lists exactly those 3.
+  expect(page.locator("section:has(h2#recent-books) .entity-list-item-name")).to_have_text(["Book", "Book2", "Book1"])

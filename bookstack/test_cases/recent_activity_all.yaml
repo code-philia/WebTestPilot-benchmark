@@ -16,3 +16,11 @@ steps:
   url: /user/admin
   solution: |
     page.get_by_role("link", name="View Profile").click()
+
+assertion_check: |
+  # Every activity is from the seeded content (hours or days ago), newest first; nothing is months or years old.
+  times = page.locator("#recent-user-activity .activity-list-item .text-muted small")
+  expect(times).to_have_count(15)
+  expect(times).not_to_contain_text([re.compile(r"month|year")])
+  for i in range(14):
+      expect(times.nth(i)).to_have_text(re.compile(r"^\d+ (seconds?|minutes?|hours?) ago$|^1 day ago$"))

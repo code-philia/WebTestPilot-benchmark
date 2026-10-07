@@ -50,3 +50,13 @@ steps:
   url: /books/book/page/page-template
   solution: |
     page.get_by_role("button", name="Save Comment").click()
+
+assertion_check: |
+  # One new comment (#6, top level); the existing thread keeps its nesting: 1 > 3 > {4, 5}, and 2.
+  expect(page.locator(".comment-box[id^=comment]")).to_have_count(6)
+  expect(page.locator("#comment6")).to_contain_text("I like this template")
+  branch3 = page.locator("#comment3").locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' comment-branch ')][1]")
+  expect(branch3.locator("#comment4")).to_have_count(1)
+  expect(branch3.locator("#comment5")).to_have_count(1)
+  branch1 = page.locator("#comment1").locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' comment-branch ')][1]")
+  expect(branch1.locator("#comment3")).to_have_count(1)

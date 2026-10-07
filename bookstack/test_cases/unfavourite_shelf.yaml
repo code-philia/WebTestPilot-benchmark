@@ -73,3 +73,6 @@ steps:
   solution: |
     page.get_by_role("link", name="My Favourites").click()
 
+assertion_check: |
+  # The seeded favourites minus 'Shelf'.
+  expect(page.locator("main .entity-list-item-name")).to_have_text(["Book1", "Chapter 2", "Page 1"])

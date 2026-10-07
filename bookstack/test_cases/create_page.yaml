@@ -41,3 +41,7 @@ steps:
   solution: |
     page.get_by_role("button", name="Save Page").click()
 
+assertion_check: |
+  # The new page has no comments.
+  expect(page.locator(".comment-box[id^=comment]")).to_have_count(0)
+  expect(page.locator('[refs="page-comments@comments-title"]')).to_have_text("No Comments")
