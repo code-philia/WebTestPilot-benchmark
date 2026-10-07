@@ -2,7 +2,7 @@ name: Create News
 setup_function: login_to_indico
 steps:
 - action: Click on 'Administration' in the top navigation bar
-  expectation: A message 'A new Indico version...' is shown
+  expectation: The 'General Settings' administration page is shown (no need to check details)
   action_check: |
     expect(page.get_by_role("heading", name="General Settings")).to_be_visible()
   url: /admin/settings/
