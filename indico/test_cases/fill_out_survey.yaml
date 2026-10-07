@@ -67,3 +67,6 @@ steps:
   url: /event/2/surveys
   solution: |
     page.get_by_role("button", name="Submit").click()
+
+assertion_check: |
+  expect(page.locator("#flashed-messages")).to_contain_text("The survey has been submitted")

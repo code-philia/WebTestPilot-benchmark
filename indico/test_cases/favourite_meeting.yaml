@@ -24,3 +24,9 @@ steps:
   url: /
   solution: |
     page.get_by_role("link").nth(1).click()
+
+assertion_check: |
+  # Only 'PhD Research Group Monthly Meeting' is favourited: one star in the events list, on that event.
+  stars = page.locator(".event-list .event-icons .icon-star, li .event-icons .icon-star")
+  expect(stars).to_have_count(1)
+  expect(page.locator("li").filter(has=page.locator(".event-icons .icon-star")).locator(".event-title a")).to_have_text(['PhD Research Group Monthly Meeting'])

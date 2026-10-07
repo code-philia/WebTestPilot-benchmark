@@ -48,3 +48,10 @@ steps:
   url: /category/0/manage
   solution: |
     page.get_by_role("button", name="Delete event").click()
+
+assertion_check: |
+  # The category's events are all seeded events minus 'Lecture 1'.
+  rows = page.locator("#event-management table.event-management tbody tr")
+  expect(rows).to_have_count(17)
+  for i, title in enumerate(['Lecture 2 w/ Survey', 'Conference 1', 'International Workshop on Formal Methods for UI Testing', 'Indico Platform Deployment Planning', 'Web Automation & E2E Testing Summit', 'PhD Research Group Monthly Meeting', 'International Conference on AI Testing (IC-AIT 2026)', 'Test Infrastructure Cost Optimization Meeting', 'Meeting 1', 'International Symposium on End-to-End System Validation', 'Accessibility Testing Guidelines Alignment', 'Security & Privacy Review Board', 'Workshop on LLMs for Software Testing', 'Data-Driven Quality Engineering Conference', 'Frontend Testing Strategy Review', 'Program Committee Kickoff – IC-AIT 2026', 'Weekly Software Architecture Sync']):
+      expect(rows.nth(i)).to_contain_text(title)

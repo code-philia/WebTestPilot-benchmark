@@ -64,3 +64,10 @@ steps:
   url: /event/3/registrations/participants
   solution: |
     page.get_by_role("link", name="Participant List").click()
+
+assertion_check: |
+  # The 14 seeded participants plus the new registration (Admin User).
+  rows = page.locator("table.ui.celled.fixed.sortable.table tbody tr")
+  expect(rows).to_have_count(15)
+  first_names = page.locator("table.ui.celled.fixed.sortable.table tbody tr td:first-child")
+  expect(first_names).to_have_text(["Admin", "Alexander", "Ava", "Charlotte", "Elijah", "Emma", "Evelyn", "Harper", "Isabella", "Jacob", "Liam", "Lucas", "Mason", "Mia", "Noah"])

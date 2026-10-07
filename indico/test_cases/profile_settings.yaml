@@ -40,3 +40,6 @@ steps:
   url: /user/favorites
   solution: |
     page.get_by_role("link", name="Favourites").click()
+
+assertion_check: |
+  expect(page.get_by_role("button", name="Add Indico user")).to_be_visible()

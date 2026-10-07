@@ -56,3 +56,9 @@ steps:
   url: /admin/unlisted-events/
   solution: |
     page.get_by_role("link", name="Unlisted events").click()
+
+assertion_check: |
+  expect(page.get_by_role("heading", name="Unlisted events")).to_be_visible()
+  form = page.locator("form.i-form")
+  expect(form.get_by_text("Enabled", exact=True)).to_be_visible()
+  expect(form.get_by_role("button", name="Save")).to_be_visible()

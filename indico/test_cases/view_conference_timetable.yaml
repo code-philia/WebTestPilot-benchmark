@@ -56,3 +56,8 @@ steps:
   url: /event/3/timetable/#20250302
   solution: |
     page.wait_for_load_state()
+
+assertion_check: |
+  # With Session 2 filtered out, no Session 2 block is visible.
+  expect(page.locator("#timetable_canvas .timetableBlock").filter(has_text="Session 2").filter(visible=True)).to_have_count(0)
+  expect(page.locator("#timetable_canvas .timetableBlock").filter(has_text="Session 1").filter(visible=True)).not_to_have_count(0)

@@ -16,3 +16,6 @@ steps:
   url: /rooms/book
   solution: |
     page.wait_for_load_state()
+
+assertion_check: |
+  expect(page.get_by_role("heading", name="Room Booking", level=1)).to_be_visible()

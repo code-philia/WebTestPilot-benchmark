@@ -24,3 +24,9 @@ steps:
   url: /search/?q=test
   solution: |
     page.wait_for_load_state()
+
+assertion_check: |
+  # Every result title contains 'test' (case-insensitive).
+  titles = page.locator("#search-results .ui.list > .item .header a")
+  expect(titles).to_have_count(7)
+  expect(titles).to_have_text([re.compile("test", re.IGNORECASE)] * 7)

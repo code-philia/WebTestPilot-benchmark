@@ -24,3 +24,10 @@ steps:
   url: /
   solution: |
     page.get_by_role("link").nth(1).click()
+
+assertion_check: |
+  # All seeded events, unchanged.
+  month = lambda name: page.locator("h4").filter(has_text=name).locator("xpath=following-sibling::ul[1]").locator(".event-title a")
+  expect(month("January 2025")).to_have_text(['Test Infrastructure Cost Optimization Meeting', 'Meeting 1', 'International Symposium on End-to-End System Validation', 'Accessibility Testing Guidelines Alignment', 'Workshop on LLMs for Software Testing', 'Security & Privacy Review Board', 'Data-Driven Quality Engineering Conference', 'Frontend Testing Strategy Review', 'Program Committee Kickoff – IC-AIT 2026', 'Weekly Software Architecture Sync'])
+  expect(month("February 2025")).to_have_text(['International Workshop on Formal Methods for UI Testing', 'Indico Platform Deployment Planning', 'Web Automation & E2E Testing Summit', 'PhD Research Group Monthly Meeting', 'International Conference on AI Testing (IC-AIT 2026)'])
+  expect(month("March 2025")).to_have_text(['First Last, "Lecture 2 w/ Survey"', 'Conference 1', 'Admin User, "Lecture 1"'])
