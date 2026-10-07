@@ -23,7 +23,7 @@ steps:
     expect(page.get_by_role("button", name="Mark Paid")).to_be_visible()
   url: /invoices/wMvbmOeYAl/edit
   solution: |
-    page.get_by_role("button").nth(4).click()
+    page.locator("[data-cy=chevronDownButton]").click()
 
 - action: Click on the 'Mark Paid' button
   expectation: The invoice status is marked as 'Paid'
