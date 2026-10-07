@@ -15,7 +15,6 @@ SETUP_FUNCTION selects which app login to run before the browser is handed off.
 
 from __future__ import annotations
 
-import json
 import os
 import re
 import signal
@@ -36,23 +35,6 @@ BUG_INJECTOR = Path("/bug_injector.js")
 CDP_PORT = 9222  # nginx public port
 CDP_INTERNAL_PORT = 19222  # Chromium's actual port (127.0.0.1 only)
 
-# flash's own DB snapshot/rollback recovery discovers its DB connection by
-# fetching this from the same browser:9222 host:port it already uses for
-# CDP - no Harbor task/trial config changes needed, and it scales to every
-# app the same way since each app's docker-compose template sets these
-# FLASH_DB_* vars to that app's own (already-hardcoded, two services up in
-# the same file) credentials.
-_FLASH_DB_CONFIG_JSON = json.dumps(
-    {
-        "engine": os.environ.get("FLASH_DB_ENGINE", ""),
-        "host": os.environ.get("FLASH_DB_HOST", ""),
-        "port": int(os.environ.get("FLASH_DB_PORT", "0") or 0),
-        "user": os.environ.get("FLASH_DB_USER", ""),
-        "password": os.environ.get("FLASH_DB_PASSWORD", ""),
-        "database": os.environ.get("FLASH_DB_NAME", ""),
-    }
-)
-
 NGINX_CONF = f"""\
 events {{}}
 http {{
@@ -63,11 +45,6 @@ http {{
     server {{
         listen {CDP_PORT};
         gzip off;
-
-        location = /flash-db-config.json {{
-            default_type application/json;
-            return 200 '{_FLASH_DB_CONFIG_JSON}';
-        }}
 
         location / {{
             proxy_pass         http://127.0.0.1:{CDP_INTERNAL_PORT};

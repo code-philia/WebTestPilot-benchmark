@@ -60,16 +60,6 @@ services:
       - APP_URL=http://webapp:80
       - PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
       - PYTHONUNBUFFERED=1
-      # flash's own DB snapshot/rollback recovery discovers these via
-      # GET http://browser:9222/flash-db-config.json - the same host:port it already uses for CDP.
-      # root/root, not admin/admin - matches DB_USER/DB_PASSWD the webapp service itself already
-      # uses above, and what seed-loader.sh uses for its own bulk load.
-      - FLASH_DB_ENGINE=mysql
-      - FLASH_DB_HOST=db
-      - FLASH_DB_PORT=3306
-      - FLASH_DB_USER=root
-      - FLASH_DB_PASSWORD=root
-      - FLASH_DB_NAME=prestashop
     volumes:
       - ./init.py:/init.py:ro
       - ./bug.js:/bug.js:ro
