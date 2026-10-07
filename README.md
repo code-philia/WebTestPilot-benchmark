@@ -44,6 +44,7 @@ steps:
 | `steps[].action_check` | Optional Playwright Python assertion that the action reached the right state. It must only read the page, and it must pass whether or not the task's bug is injected: it judges the action, not the app. |
 | `steps[].url` | Optional page path expected after the action, checked before `action_check`. |
 | `steps[].solution` | Required Playwright code that performs the action on `page`. |
+| `assertion_check` | Optional task-level Playwright assertion on the final page, written as static values from the seed (patterns for times and today's dates). It must pass when the task runs without its bug and fail with the bug injected, proving the bug is observable. Only the reference solution's replay runs it; agents are never scored on it. |
 
 The filename stem is the stable task identifier. Use a unique stem within each app, and keep a matching bug script under `bugs/` when testing bug detection. A bug script contains `isConditionMet` and `onConditionMet` blocks delimited by the markers shown in [`template.js`](template.js).
 
