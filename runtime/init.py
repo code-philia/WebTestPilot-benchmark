@@ -168,6 +168,13 @@ def main() -> None:
                 "--no-sandbox",
                 "--disable-dev-shm-usage",
                 "--disable-gpu",
+                # Size the window, not just init's viewport override below, to a
+                # 1280x720 page: another CDP client (an agent, the oracle
+                # replay) taking a Playwright screenshot can clear the override,
+                # and the page then falls back to the window's content area
+                # (780x437 by default). Headless Chromium's window includes 143
+                # px of browser UI above the page.
+                "--window-size=1280,863",
                 f"--remote-debugging-port={CDP_INTERNAL_PORT}",
                 "--remote-allow-origins=*",
                 "--no-first-run",
