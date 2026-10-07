@@ -26,7 +26,7 @@ steps:
     page.get_by_role("textbox", name="Event title").fill("New Meeting")
 
 - action: Set 'Protection mode' to 'Public'
-  expectation: A dialog form with title 'Create new conference' is shown (no need to check details)
+  expectation: A dialog form with title 'Create new meeting' is shown (no need to check details)
   action_check: |
     expect(page.locator("#form-group-event-creation-protection_mode")).to_contain_text("public")
   url: /
