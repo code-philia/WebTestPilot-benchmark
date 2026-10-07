@@ -90,3 +90,11 @@ steps:
   url: /module/blockwishlist/view?id_wishlist=1
   solution: |
     page.get_by_text("My wishlist (5) share").click()
+
+assertion_check: |
+  # The 4 wishlisted products plus the added 'Hummingbird printed t-shirt'.
+  products = page.locator("ul.wishlist-products-list > li .wishlist-product-title")
+  expect(products).to_have_count(5)
+  expect(products.filter(has_text="Hummingbird printed t-shirt")).to_have_count(1)
+  for name in ["Mug The adventure begins", "Mug Today is a good day", "Brown bear cushion"]:
+      expect(products.filter(has_text=name)).to_have_count(1)

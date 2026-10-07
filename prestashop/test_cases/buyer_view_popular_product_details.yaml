@@ -24,3 +24,9 @@ steps:
   url: /
   solution: |
     page.locator(".breadcrumb").get_by_role("link", name="Home", exact=True).click()
+
+assertion_check: |
+  # The home page shows the same product sections as before: Popular Products, On sale, New products.
+  expect(page.locator("section.featured-products h2")).to_have_text(["Popular Products", "On sale", "New products"])
+  on_sale = page.locator("section.featured-products").filter(has=page.locator("h2", has_text="On sale"))
+  expect(on_sale.locator(".product-title a")).to_have_text(["Hummingbird printed sweater", "Hummingbird printed t-shirt"])

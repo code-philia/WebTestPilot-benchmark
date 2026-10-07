@@ -24,3 +24,6 @@ steps:
   url: /contact-us
   solution: |
     page.get_by_role("button", name="Send").click()
+
+assertion_check: |
+  expect(page.locator("div.alert.alert-success")).to_contain_text("Your message has been successfully sent to our team.")

@@ -8,3 +8,9 @@ steps:
   url: /contact-us
   solution: |
     page.locator("#contact-link").get_by_role("link", name="Contact us").click()
+
+assertion_check: |
+  # The store information matches the footer: PrestaShop, United Kingdom.
+  store = page.locator(".block .data").first
+  expect(store).to_contain_text("PrestaShop")
+  expect(store).to_contain_text("United Kingdom")

@@ -32,3 +32,8 @@ steps:
   url: /brand/1-studio-design
   solution: |
     page.get_by_role("link", name="Price, high to low").click()
+
+assertion_check: |
+  # The brand's 9 products, by price high to low (ties in any order).
+  prices = page.locator(".js-product .product-description .price")
+  expect(prices).to_have_text(['€28.72', '€19.12', '€18.90', '€18.90', '€18.90', '€13.90', '€11.90', '€11.90', '€11.90'])

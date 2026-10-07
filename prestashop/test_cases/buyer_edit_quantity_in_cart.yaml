@@ -17,3 +17,10 @@ steps:
   solution: |
     page.get_by_role("button").nth(1).click()
 
+assertion_check: |
+  # The same cart, with the t-shirt's quantity raised to 2.
+  items = page.locator("ul.cart-items > li.cart-item")
+  expect(items).to_have_count(4)
+  for i, name in enumerate(['Hummingbird printed t-shirt', 'Mountain fox notebook', 'Brown bear cushion', 'Hummingbird printed sweater']):
+      expect(items.nth(i)).to_contain_text(name)
+  expect(items.nth(0).locator("input.js-cart-line-product-quantity")).to_have_value("2")

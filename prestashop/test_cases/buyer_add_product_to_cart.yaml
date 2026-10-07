@@ -48,3 +48,10 @@ steps:
   url: /cart?action=show
   solution: |
     page.get_by_role("link", name="Proceed to checkout").first.click()
+
+assertion_check: |
+  # The seeded cart plus exactly one added product.
+  items = page.locator("ul.cart-items > li.cart-item")
+  expect(items).to_have_count(5)
+  for i, name in enumerate(['Hummingbird printed t-shirt', 'Mountain fox notebook', 'Brown bear cushion', 'Hummingbird printed sweater', 'Mug The adventure begins']):
+      expect(items.nth(i)).to_contain_text(name)

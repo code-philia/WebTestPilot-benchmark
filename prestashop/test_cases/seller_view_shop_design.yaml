@@ -49,3 +49,7 @@ steps:
   url: '^/webtestpilot/index\.php\?controller=AdminImages&token=[^&#]+$'
   solution: |
     page.get_by_role("link", name="Image Settings").click()
+
+assertion_check: |
+  expect(page.locator("#page-header-desc-image_type-new_image_type")).to_be_visible()
+  expect(page.locator("#page-header-desc-image_type-new_image_type")).to_contain_text("Add new image type")

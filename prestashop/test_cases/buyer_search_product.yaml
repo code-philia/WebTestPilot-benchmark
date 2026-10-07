@@ -16,3 +16,9 @@ steps:
   url: /search?controller=search&s=Mug
   solution: |
     page.get_by_role("textbox", name="Search").press("Enter")
+
+assertion_check: |
+  # Every result's name contains 'mug' (case-insensitive).
+  names = page.locator(".js-product .product-description .product-title a")
+  expect(names).to_have_count(5)
+  expect(names).to_have_text([re.compile("mug", re.IGNORECASE)] * 5)

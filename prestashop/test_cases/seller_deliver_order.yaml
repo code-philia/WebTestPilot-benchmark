@@ -57,3 +57,10 @@ steps:
   url: '^/webtestpilot/index\.php/sell/orders/5/view\?_token=[^&#]+$'
   solution: |
     page.evaluate("window.scrollBy(0, window.innerHeight)")
+
+assertion_check: |
+  # The status history records the update to 'Delivered' on top of the original status.
+  rows = page.locator('table[data-role="history-grid-table"] tbody tr')
+  expect(rows).to_have_count(2)
+  expect(rows.nth(0).locator("span.badge")).to_have_text('Delivered')
+  expect(rows.nth(1).locator("span.badge")).to_have_text("Awaiting bank wire payment")

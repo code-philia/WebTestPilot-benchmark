@@ -32,3 +32,8 @@ steps:
   url: /brand/1-studio-design
   solution: |
     page.get_by_role("link", name="Name, A to Z").click()
+
+assertion_check: |
+  # The brand's 9 products, by name A to Z.
+  names = page.locator(".js-product .product-description .product-title a")
+  expect(names).to_have_text(['Brown bear cushion', 'Customizable mug', 'Hummingbird cushion', 'Hummingbird printed sweater', 'Hummingbird printed t-shirt', 'Mountain fox cushion', 'Mug The adventure begins', 'Mug The best is yet to come', 'Mug Today is a good day'])

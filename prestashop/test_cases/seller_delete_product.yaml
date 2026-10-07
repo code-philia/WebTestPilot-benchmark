@@ -49,3 +49,11 @@ steps:
   url: '^/webtestpilot/index\.php/sell/catalog/products-v2/\?_token=[^&#]+$'
   solution: |
     page.get_by_role("button", name="Delete").click()
+
+assertion_check: |
+  # The 19 seeded products minus the deleted 'Customizable mug' (id 19).
+  rows = page.locator("table tbody tr")
+  expect(rows).to_have_count(18)
+  expect(rows.first).to_contain_text("Hummingbird notebook")
+  expect(rows.last).to_contain_text("Hummingbird printed t-shirt")
+  expect(page.locator("table tbody").get_by_text("Customizable mug")).to_have_count(0)

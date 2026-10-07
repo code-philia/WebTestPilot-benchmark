@@ -33,3 +33,10 @@ steps:
   url: '^/webtestpilot/index\.php/sell/catalog/products-v2/\?offset=last&limit=last&_token=[^&#]+$'
   solution: |
     page.get_by_role("link", name="arrow_back_ios Go to catalog").click()
+
+assertion_check: |
+  # All 19 seeded products, unchanged.
+  rows = page.locator("table tbody tr")
+  expect(rows).to_have_count(19)
+  expect(rows.first).to_contain_text("Customizable mug")
+  expect(rows.last).to_contain_text("Hummingbird printed t-shirt")

@@ -8,3 +8,9 @@ steps:
   url: '^/webtestpilot/index\.php\?controller=AdminCarts&token=[^&#]+$'
   solution: |
     page.get_by_role("link", name="Active Shopping Carts").click()
+
+assertion_check: |
+  # 6 carts: the 5 ordered carts counted as active on the dashboard, and one abandoned cart.
+  carts = page.locator("#table-cart tbody tr")
+  expect(carts).to_have_count(6)
+  expect(carts.filter(has_text="Abandoned cart")).to_have_count(1)

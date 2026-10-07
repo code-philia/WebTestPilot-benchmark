@@ -17,3 +17,9 @@ steps:
   solution: |
     page.get_by_role("link", name="delete").first.click()
 
+assertion_check: |
+  # The seeded cart minus the removed t-shirt.
+  items = page.locator("ul.cart-items > li.cart-item")
+  expect(items).to_have_count(3)
+  for i, name in enumerate(['Mountain fox notebook', 'Brown bear cushion', 'Hummingbird printed sweater']):
+      expect(items.nth(i)).to_contain_text(name)
