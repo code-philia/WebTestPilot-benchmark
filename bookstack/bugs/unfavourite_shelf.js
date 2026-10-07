@@ -7,20 +7,12 @@ const isConditionMet = () => {
 
 // BEGIN onConditionMet
 const onConditionMet = () => {
+  // Unfavouriting 'Shelf' also drops another favourite: the list no longer
+  // equals the previous list minus 'Shelf'.
   const entityList = document.querySelector('main .book-contents .entity-list');
-
-  if (entityList) {
-    // Find the Shelf item by its name
-    const shelfItem = Array.from(entityList.querySelectorAll('.bookshelf.entity-list-item'))
-      .find(el => el.querySelector('.entity-list-item-name')?.textContent.trim() === 'Shelf');
-
-    // Remove it if found
-    if (shelfItem) {
-      shelfItem.remove();
-      console.log('Shelf item removed');
-    } else {
-      console.log('Shelf item not found');
-    }
-  }
+  if (!entityList) return;
+  const item = Array.from(entityList.querySelectorAll('.entity-list-item'))
+    .find(el => el.querySelector('.entity-list-item-name')?.textContent.trim() === 'Chapter 2');
+  if (item) item.remove();
 };
 // END onConditionMet
