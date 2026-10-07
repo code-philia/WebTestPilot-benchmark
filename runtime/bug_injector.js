@@ -68,6 +68,50 @@
   // Replace with your custom code
   const onConditionMet = () => {};
 
+  // Runs fn once the page has stopped changing: no DOM mutations and no new
+  // resource responses for SETTLE_QUIET_MS (at most SETTLE_TIMEOUT_MS). A bug
+  // applied while the app is still rendering is either skipped (its target is
+  // not there yet) or re-rendered away. The quiet window is shorter than the
+  // oracle's (500 ms), so applying the bug restarts the oracle's wait and it
+  // always samples the page after the bug is on it.
+  const SETTLE_QUIET_MS = 300;
+  const SETTLE_TIMEOUT_MS = 3000;
+  function whenSettled(fn) {
+    const start = performance.now();
+    let last = start;
+    const bump = () => { last = performance.now(); };
+    const mutations = new MutationObserver(bump);
+    mutations.observe(document.documentElement, { subtree: true, childList: true, attributes: true, characterData: true });
+    const network = new PerformanceObserver(bump);
+    network.observe({ type: "resource" });
+    const tick = () => {
+      const now = performance.now();
+      if (now - last >= SETTLE_QUIET_MS || now - start >= SETTLE_TIMEOUT_MS) {
+        mutations.disconnect();
+        network.disconnect();
+        fn();
+      } else {
+        setTimeout(tick, 50);
+      }
+    };
+    tick();
+  }
+
+  // Single-page apps change URL without loading a document, and re-render the
+  // page from scratch when the user comes back to it. Once the bug has fired,
+  // re-apply it whenever the tab returns to the URL where it fired, as a full
+  // page load would.
+  function watchRevisits() {
+    const target = sessionStorage.getItem(TRIGGERED_URL_KEY);
+    let current = window.location.pathname + window.location.search;
+    setInterval(() => {
+      const here = window.location.pathname + window.location.search;
+      if (here === current) return;
+      current = here;
+      if (here === target) whenSettled(onConditionMet);
+    }, 200);
+  }
+
   // If the bug was already triggered in a prior page load, re-apply the effect on
   // every subsequent visit to the same page.  Uses the URL recorded at trigger time
   // (pathname + search) rather than calling isConditionMet() again: transition-based
@@ -80,11 +124,12 @@
     const triggeredUrl = sessionStorage.getItem(TRIGGERED_URL_KEY);
     if (triggeredUrl && (window.location.pathname + window.location.search) === triggeredUrl) {
       if (document.readyState === "complete" || document.readyState === "interactive") {
-        onConditionMet();
+        whenSettled(onConditionMet);
       } else {
-        document.addEventListener("DOMContentLoaded", () => onConditionMet(), { once: true });
+        document.addEventListener("DOMContentLoaded", () => whenSettled(onConditionMet), { once: true });
       }
     }
+    watchRevisits();
     return;
   }
 
@@ -103,13 +148,19 @@
   let mutationObserver = null;
 
   // Handles detection events by checking condition and triggering onConditionMet() once
+  // Set once the condition holds, while the bug waits for the page to settle.
+  let applyPending = false;
+
   function handleDetection() {
-    if (conditionMet) return;
+    if (conditionMet || applyPending) return;
 
     if (isConditionMet()) {
-      conditionMet = true;
-      onConditionMet();
-      cleanup();
+      applyPending = true;
+      whenSettled(() => {
+        conditionMet = true;
+        onConditionMet();
+        cleanup();
+      });
     }
 
     if (mutationObserver) {
@@ -119,8 +170,10 @@
 
   // Cleanup after triggering onConditionMet()
   function cleanup() {
+    const firstTrigger = !sessionStorage.getItem(STORAGE_KEY);
     sessionStorage.setItem(STORAGE_KEY, "true");
     sessionStorage.setItem(TRIGGERED_URL_KEY, window.location.pathname + window.location.search);
+    if (firstTrigger) watchRevisits();
 
     if (mutationObserver) {
       mutationObserver.disconnect();
