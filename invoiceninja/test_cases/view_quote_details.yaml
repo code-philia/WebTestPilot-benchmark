@@ -16,3 +16,8 @@ steps:
   url: /quotes/Wpmbk5ezJn/edit
   solution: |
     page.get_by_role("link", name="123456", exact=True).click()
+
+assertion_check: |
+  # The quoted products add up to the 720,000 subtotal.
+  totals = page.locator("form").filter(has_text="Subtotal").first
+  expect(totals.locator("dt", has_text="Subtotal").locator("xpath=following-sibling::dd[1]")).to_have_text("$ 720,000.00")

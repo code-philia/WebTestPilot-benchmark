@@ -8,3 +8,10 @@ steps:
   url: /recurring_invoices
   solution: |
     page.get_by_role("link", name="Recurring Invoices").click()
+
+assertion_check: |
+  # The recurring invoices table holds the one invoice in the dashboard's Upcoming Recurring Invoices.
+  rows = page.locator("table tbody tr")
+  expect(rows).to_have_count(1)
+  for i, number in enumerate(['123456']):
+      expect(rows.nth(i).locator("td").filter(has_text=re.compile(r"^\s*" + re.escape(number) + r"\s*$"))).to_have_count(1)

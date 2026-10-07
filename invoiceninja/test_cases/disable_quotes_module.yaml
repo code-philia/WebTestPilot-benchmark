@@ -48,3 +48,9 @@ steps:
   url: /dashboard
   solution: |
     page.get_by_role("link", name="Dashboard").click()
+
+assertion_check: |
+  # With the Quotes module disabled, its dashboard panels are gone; the others remain.
+  for title in ["Upcoming Quotes", "Expired Quotes"]:
+      expect(page.locator("h3", has_text=title)).to_have_count(0)
+  expect(page.locator("h3", has_text="Upcoming Invoices")).to_have_count(1)

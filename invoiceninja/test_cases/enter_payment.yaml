@@ -64,3 +64,7 @@ steps:
   url: '^\/payments\/([A-Za-z0-9]+)\/edit$'
   solution: |
     page.get_by_role("button", name="Save").click()
+
+assertion_check: |
+  # The saved payment keeps the selected payment type.
+  expect(page.locator("div:has(> dt > span:text-is('Payment Type'))").locator(".css-ood9ll-singleValue")).to_have_text("American Express")

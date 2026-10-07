@@ -58,3 +58,9 @@ steps:
   url: /dashboard
   solution: |
     page.get_by_role("link", name="Dashboard").click()
+
+assertion_check: |
+  # With the Invoices modules disabled, their dashboard panels are gone; the others remain.
+  for title in ["Upcoming Invoices", "Past Due Invoices", "Upcoming Recurring Invoices"]:
+      expect(page.locator("h3", has_text=title)).to_have_count(0)
+  expect(page.locator("h3", has_text="Upcoming Quotes")).to_have_count(1)

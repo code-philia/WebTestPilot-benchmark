@@ -56,3 +56,17 @@ steps:
   url: /invoices
   solution: |
     page.get_by_role("link", name="Invoices", exact=True).click()
+
+assertion_check: |
+  # The seeded invoices keep their number, amount, and date; the converted quote adds one invoice (client and amount match the quote).
+  rows = page.locator("table tbody tr")
+  expect(rows).to_have_count(5)
+  seeded = [("123456", "$ 120,000.00", "07/Oct/2025"), ("123456_sent", "$ 120,000.00", "07/Oct/2025"), ("123456_draft", "$ 120,000.00", "07/Oct/2025"), ("123456_past_due", "$ 60,000.00", "01/Jan/1970")]
+  for i, (number, amount, date) in enumerate(seeded):
+      cells = rows.nth(i).locator("td")
+      expect(cells.nth(2)).to_have_text(number)
+      expect(cells.nth(4)).to_have_text(amount)
+      expect(cells.nth(6)).to_have_text(date)
+  new = rows.nth(4).locator("td")
+  expect(new.nth(3)).to_have_text("company_name")
+  expect(new.nth(4)).to_have_text("$ 720,000.00")

@@ -40,3 +40,8 @@ steps:
   url: /dashboard
   solution: |
     page.get_by_role("link", name="Dashboard").click()
+
+assertion_check: |
+  # The only past-due invoice was paid, so the panel is empty.
+  panel = lambda title: page.locator("form").filter(has=page.locator("h3", has_text=title))
+  expect(panel("Past Due Invoices").locator("table tbody tr")).to_have_text(["No records found"])

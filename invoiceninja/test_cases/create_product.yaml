@@ -48,3 +48,8 @@ steps:
   url: '^\/products\/([A-Za-z0-9]+)\/edit$'
   solution: |
     page.get_by_role("button", name="Save").click()
+
+assertion_check: |
+  # The saved product is Active and keeps the default tax category.
+  expect(page.get_by_text("Active", exact=True)).to_be_visible()
+  expect(page.locator("div:has(> dt > span:text-is('Tax Category'))").locator(".css-ood9ll-singleValue")).to_have_text("Physical Goods")

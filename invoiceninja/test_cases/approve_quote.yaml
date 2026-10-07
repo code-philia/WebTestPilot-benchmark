@@ -32,3 +32,8 @@ steps:
   url: /dashboard
   solution: |
     page.get_by_role("link", name="Dashboard").click()
+
+assertion_check: |
+  # The only upcoming quote was approved, so the panel is empty.
+  panel = lambda title: page.locator("form").filter(has=page.locator("h3", has_text=title))
+  expect(panel("Upcoming Quotes").locator("table tbody tr")).to_have_text(["No records found"])

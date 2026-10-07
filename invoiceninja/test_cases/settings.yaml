@@ -88,3 +88,6 @@ steps:
   url: /settings/backup_restore
   solution: |
     page.get_by_role("link", name="Backup | Restore").click()
+
+assertion_check: |
+  expect(page.get_by_role("button", name="Export")).to_be_visible()

@@ -40,3 +40,12 @@ steps:
   url: /dashboard
   solution: |
     page.get_by_role("link", name="Dashboard").click()
+
+assertion_check: |
+  # This period's figures: the new $120,000 expense, and no invoices, payments, or outstanding amounts.
+  figure = lambda label: page.locator("div.flex.justify-between.items-center").filter(has=page.locator("span.text-gray-500", has_text=re.compile("^" + re.escape(label) + "$")))
+  expect(figure("Expenses")).to_contain_text("$ 120,000.00")
+  expect(figure("Invoices")).to_contain_text("$ 0.00")
+  expect(figure("Payments")).to_contain_text("$ 0.00")
+  expect(figure("Outstanding")).to_contain_text("$ 0.00")
+  expect(figure("Total Invoices Outstanding")).to_contain_text("0")

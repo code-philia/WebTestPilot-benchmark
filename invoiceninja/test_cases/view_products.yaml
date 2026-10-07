@@ -8,3 +8,8 @@ steps:
   url: /products
   solution: |
     page.get_by_role("link", name="Products").click()
+
+assertion_check: |
+  # 10 products on the first page, with pagination below (11 products in total).
+  expect(page.locator("table tbody tr")).to_have_count(10)
+  expect(page.get_by_text(re.compile(r"Page 1 of 2"))).to_be_visible()

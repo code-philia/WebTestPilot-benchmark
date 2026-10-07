@@ -56,3 +56,8 @@ steps:
   url: /dashboard
   solution: |
     page.get_by_role("link", name="Dashboard").click()
+
+assertion_check: |
+  # The only expired quote was deleted, so the panel is empty.
+  panel = lambda title: page.locator("form").filter(has=page.locator("h3", has_text=title))
+  expect(panel("Expired Quotes").locator("table tbody tr")).to_have_text(["No records found"])

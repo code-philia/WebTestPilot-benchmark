@@ -8,3 +8,10 @@ steps:
   url: /payments
   solution: |
     page.get_by_role("link", name="Payments").click()
+
+assertion_check: |
+  # The payments table holds the one 'Completed' payment shown in the dashboard's Recent Payments.
+  rows = page.locator("table tbody tr")
+  expect(rows).to_have_count(1)
+  for i, number in enumerate(['0001']):
+      expect(rows.nth(i).locator("td").filter(has_text=re.compile(r"^\s*" + re.escape(number) + r"\s*$"))).to_have_count(1)

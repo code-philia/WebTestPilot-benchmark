@@ -48,3 +48,8 @@ steps:
   url: '^\/invoices\/([A-Za-z0-9]+)\/edit\?table=products$'
   solution: |
     page.get_by_role("button", name="Save").click()
+
+assertion_check: |
+  # One product at 200: subtotal 200.
+  totals = page.locator("form").filter(has_text="Subtotal").first
+  expect(totals.locator("dt", has_text="Subtotal").locator("xpath=following-sibling::dd[1]")).to_have_text("$ 200.00")

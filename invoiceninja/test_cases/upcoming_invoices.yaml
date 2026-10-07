@@ -8,3 +8,10 @@ steps:
   url: /invoices
   solution: |
     page.get_by_role("link", name="Invoices", exact=True).click()
+
+assertion_check: |
+  # The invoices table holds the 4 seeded invoices; the one 'Sent' invoice is the dashboard's Upcoming Invoices.
+  rows = page.locator("table tbody tr")
+  expect(rows).to_have_count(4)
+  for i, number in enumerate(['123456', '123456_sent', '123456_draft', '123456_past_due']):
+      expect(rows.nth(i).locator("td").filter(has_text=re.compile(r"^\s*" + re.escape(number) + r"\s*$"))).to_have_count(1)

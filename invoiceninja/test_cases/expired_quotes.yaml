@@ -8,3 +8,10 @@ steps:
   url: /quotes
   solution: |
     page.get_by_role("link", name="Quotes").click()
+
+assertion_check: |
+  # The quotes table holds the 3 seeded quotes; the one 'Expired' quote is the dashboard's Expired Quotes.
+  rows = page.locator("table tbody tr")
+  expect(rows).to_have_count(3)
+  for i, number in enumerate(['123456_expired', '123456', '0001']):
+      expect(rows.nth(i).locator("td").filter(has_text=re.compile(r"^\s*" + re.escape(number) + r"\s*$"))).to_have_count(1)
