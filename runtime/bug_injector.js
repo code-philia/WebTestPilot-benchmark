@@ -68,33 +68,18 @@
   // Replace with your custom code
   const onConditionMet = () => {};
 
-  // Runs fn once the page has stopped changing: no DOM mutations and no new
-  // resource responses for SETTLE_QUIET_MS (at most SETTLE_TIMEOUT_MS). A bug
-  // applied while the app is still rendering is either skipped (its target is
-  // not there yet) or re-rendered away. The quiet window is shorter than the
-  // oracle's (500 ms), so applying the bug restarts the oracle's wait and it
-  // always samples the page after the bug is on it.
+  // Runs fn once the page has stopped changing, using the benchmark's shared
+  // "page has settled" rule (adapter/templates/environment/settle.js, inlined
+  // here when tasks are generated). A bug applied while the app is still
+  // rendering is either skipped (its target is not there yet) or re-rendered
+  // away. The quiet window is shorter than the oracle's (500 ms), so applying
+  // the bug restarts the oracle's wait and it always samples the page after
+  // the bug is on it.
   const SETTLE_QUIET_MS = 300;
   const SETTLE_TIMEOUT_MS = 3000;
+  const settle = /* SETTLE_JS */ null;
   function whenSettled(fn) {
-    const start = performance.now();
-    let last = start;
-    const bump = () => { last = performance.now(); };
-    const mutations = new MutationObserver(bump);
-    mutations.observe(document.documentElement, { subtree: true, childList: true, attributes: true, characterData: true });
-    const network = new PerformanceObserver(bump);
-    network.observe({ type: "resource" });
-    const tick = () => {
-      const now = performance.now();
-      if (now - last >= SETTLE_QUIET_MS || now - start >= SETTLE_TIMEOUT_MS) {
-        mutations.disconnect();
-        network.disconnect();
-        fn();
-      } else {
-        setTimeout(tick, 50);
-      }
-    };
-    tick();
+    settle({ quietMs: SETTLE_QUIET_MS, timeoutMs: SETTLE_TIMEOUT_MS }).then(() => fn());
   }
 
   // Single-page apps change URL without loading a document, and re-render the
