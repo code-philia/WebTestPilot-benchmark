@@ -95,16 +95,35 @@ def _setup_indico(page: Page) -> None:
     page.get_by_role("textbox", name="Password").fill("webtestpilot")
     page.get_by_role("button", name="Login with Indico").click()
     page.wait_for_load_state("domcontentloaded")
+    # Every seeded event is in the past, so Indico folds all but the latest
+    # month behind "There are N events in the past. Show". Clicking Show
+    # fetches the list and, in a separate request, saves "show past events" in
+    # the session. Wait for that save: a reload before it lands (the bug-mode
+    # reload in main) brings the folded list back. Then reload to confirm the
+    # session kept it, so the start page does not depend on in-page state.
     heading = page.get_by_role("heading", name="February 2025")
     show = page.get_by_role("link", name="Show").first
-    for _ in range(50):
-        if heading.is_visible():
-            break
-        if show.is_visible():
-            show.click()
-        page.wait_for_timeout(200)
-    else:
-        raise TimeoutError("February 2025 heading never appeared")
+
+    def saves_past_events(response) -> bool:
+        return response.request.method == "PUT" and response.url.endswith("/show-past-events")
+
+    for attempt in range(3):
+        for _ in range(50):
+            if heading.is_visible():
+                break
+            if show.is_visible():
+                with page.expect_response(saves_past_events, timeout=10_000):
+                    show.click()
+            page.wait_for_timeout(200)
+        else:
+            raise TimeoutError("February 2025 heading never appeared")
+        page.reload(wait_until="domcontentloaded", timeout=30_000)
+        try:
+            heading.wait_for(state="visible", timeout=10_000)
+            return
+        except Exception:
+            print(f"[init] Past events folded again after reload (attempt {attempt + 1})")
+    raise TimeoutError("Indico did not keep past events shown across a reload")
 
 
 def _setup_invoiceninja(page: Page) -> None:
