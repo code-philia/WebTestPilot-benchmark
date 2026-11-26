@@ -10,7 +10,7 @@ steps:
     page.get_by_role("link", name="First Last, \"Lecture 2 w/").click()
 
 - action: Click on 'Fill out' survey
-  expectation: Survey form with number, multi-choice, single-choice, text, yes/no, multiline text questions is shown
+  expectation: Survey form with number, multi-choice, yes/no and multiline text questions is shown
   action_check: |
     expect(page.get_by_role("link", name="Lecture 2 w/ Survey")).to_be_visible()
   url: /event/2/surveys/1
